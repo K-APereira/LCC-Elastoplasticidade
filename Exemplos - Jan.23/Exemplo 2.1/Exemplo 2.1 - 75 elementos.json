@@ -1,0 +1,1682 @@
+{
+    "type": "SHELL",
+    "vertices": [
+        {
+            "type": "VERTEX",
+            "ID": 1,
+            "prev_ID": null,
+            "next_ID": 2,
+            "he_ID": 2,
+            "point": [
+                5.0,
+                5.0
+            ],
+            "attributes": {
+                "att_names": []
+            }
+        },
+        {
+            "type": "VERTEX",
+            "ID": 2,
+            "prev_ID": 1,
+            "next_ID": 3,
+            "he_ID": 12,
+            "point": [
+                0.0,
+                5.0
+            ],
+            "attributes": {
+                "att_names": [
+                    "CC2"
+                ]
+            }
+        },
+        {
+            "type": "VERTEX",
+            "ID": 3,
+            "prev_ID": 2,
+            "next_ID": 4,
+            "he_ID": 15,
+            "point": [
+                5.0,
+                0.0
+            ],
+            "attributes": {
+                "att_names": [
+                    "CC1"
+                ]
+            }
+        },
+        {
+            "type": "VERTEX",
+            "ID": 4,
+            "prev_ID": 3,
+            "next_ID": 5,
+            "he_ID": 4,
+            "point": [
+                0.0,
+                10.0
+            ],
+            "attributes": {
+                "att_names": [
+                    "CC2"
+                ]
+            }
+        },
+        {
+            "type": "VERTEX",
+            "ID": 5,
+            "prev_ID": 4,
+            "next_ID": 6,
+            "he_ID": 20,
+            "point": [
+                10.0,
+                10.0
+            ],
+            "attributes": {
+                "att_names": []
+            }
+        },
+        {
+            "type": "VERTEX",
+            "ID": 6,
+            "prev_ID": 5,
+            "next_ID": 7,
+            "he_ID": 16,
+            "point": [
+                10.0,
+                0.0
+            ],
+            "attributes": {
+                "att_names": [
+                    "CC1"
+                ]
+            }
+        },
+        {
+            "type": "VERTEX",
+            "ID": 7,
+            "prev_ID": 6,
+            "next_ID": 8,
+            "he_ID": 7,
+            "point": [
+                10.0,
+                5.0
+            ],
+            "attributes": {
+                "att_names": []
+            }
+        },
+        {
+            "type": "VERTEX",
+            "ID": 8,
+            "prev_ID": 7,
+            "next_ID": null,
+            "he_ID": 5,
+            "point": [
+                5.0,
+                10.0
+            ],
+            "attributes": {
+                "att_names": []
+            }
+        }
+    ],
+    "edges": [
+        {
+            "type": "EDGE",
+            "ID": 1,
+            "prev_ID": null,
+            "next_ID": 2,
+            "he1_ID": 8,
+            "he2_ID": 15,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    10.0,
+                    0.0
+                ],
+                [
+                    5.0,
+                    0.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": [
+                    "CC1"
+                ]
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 2,
+            "prev_ID": 1,
+            "next_ID": 3,
+            "he1_ID": 1,
+            "he2_ID": 14,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    5.0,
+                    0.0
+                ],
+                [
+                    5.0,
+                    5.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": []
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 3,
+            "prev_ID": 2,
+            "next_ID": 4,
+            "he1_ID": 2,
+            "he2_ID": 12,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    5.0,
+                    5.0
+                ],
+                [
+                    0.0,
+                    5.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": []
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 4,
+            "prev_ID": 3,
+            "next_ID": 5,
+            "he1_ID": 3,
+            "he2_ID": 11,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    0.0,
+                    5.0
+                ],
+                [
+                    0.0,
+                    10.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": [
+                    "CC2"
+                ]
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 5,
+            "prev_ID": 4,
+            "next_ID": 6,
+            "he1_ID": 6,
+            "he2_ID": 19,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    10.0,
+                    10.0
+                ],
+                [
+                    10.0,
+                    5.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": []
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 6,
+            "prev_ID": 5,
+            "next_ID": 7,
+            "he1_ID": 7,
+            "he2_ID": 16,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    10.0,
+                    5.0
+                ],
+                [
+                    10.0,
+                    0.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": []
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 7,
+            "prev_ID": 6,
+            "next_ID": 8,
+            "he1_ID": 18,
+            "he2_ID": 13,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    5.0,
+                    5.0
+                ],
+                [
+                    10.0,
+                    5.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": []
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 8,
+            "prev_ID": 7,
+            "next_ID": 9,
+            "he1_ID": 4,
+            "he2_ID": 10,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    0.0,
+                    10.0
+                ],
+                [
+                    5.0,
+                    10.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": [
+                    "UL1"
+                ]
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 9,
+            "prev_ID": 8,
+            "next_ID": 10,
+            "he1_ID": 5,
+            "he2_ID": 20,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    5.0,
+                    10.0
+                ],
+                [
+                    10.0,
+                    10.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": [
+                    "UL1"
+                ]
+            }
+        },
+        {
+            "type": "EDGE",
+            "ID": 10,
+            "prev_ID": 9,
+            "next_ID": null,
+            "he1_ID": 9,
+            "he2_ID": 17,
+            "segment_type": "LINE",
+            "points": [
+                [
+                    5.0,
+                    5.0
+                ],
+                [
+                    5.0,
+                    10.0
+                ]
+            ],
+            "attributes": {
+                "nsudv": {
+                    "type": "Number of Subdivisions",
+                    "symbol": "Nsbdvs",
+                    "name": "Nsbdvs",
+                    "properties": {
+                        "Value": 5,
+                        "Ratio": 1.0,
+                        "Color": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "properties_type": [
+                        "int",
+                        "float",
+                        "color"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": true,
+                    "applyOnFace": false
+                },
+                "att_names": []
+            }
+        }
+    ],
+    "faces": [
+        {
+            "type": "FACE",
+            "ID": 0,
+            "prev_ID": null,
+            "next_ID": 1,
+            "loop": {
+                "type": "LOOP",
+                "ID": 1,
+                "prev_ID": null,
+                "next_ID": 2,
+                "face_ID": 0,
+                "he_loop": null,
+                "isClosed": false
+            },
+            "intLoops": [
+                {
+                    "type": "LOOP",
+                    "ID": 2,
+                    "prev_ID": 1,
+                    "next_ID": null,
+                    "face_ID": 0,
+                    "he_loop": [
+                        {
+                            "type": "HALF-EDGE",
+                            "ID": 1,
+                            "prev_ID": 8,
+                            "next_ID": 2,
+                            "vertex_ID": 3,
+                            "edge_ID": 2,
+                            "loop_ID": 2
+                        },
+                        {
+                            "type": "HALF-EDGE",
+                            "ID": 2,
+                            "prev_ID": 1,
+                            "next_ID": 3,
+                            "vertex_ID": 1,
+                            "edge_ID": 3,
+                            "loop_ID": 2
+                        },
+                        {
+                            "type": "HALF-EDGE",
+                            "ID": 3,
+                            "prev_ID": 2,
+                            "next_ID": 4,
+                            "vertex_ID": 2,
+                            "edge_ID": 4,
+                            "loop_ID": 2
+                        },
+                        {
+                            "type": "HALF-EDGE",
+                            "ID": 4,
+                            "prev_ID": 3,
+                            "next_ID": 5,
+                            "vertex_ID": 4,
+                            "edge_ID": 8,
+                            "loop_ID": 2
+                        },
+                        {
+                            "type": "HALF-EDGE",
+                            "ID": 5,
+                            "prev_ID": 4,
+                            "next_ID": 6,
+                            "vertex_ID": 8,
+                            "edge_ID": 9,
+                            "loop_ID": 2
+                        },
+                        {
+                            "type": "HALF-EDGE",
+                            "ID": 6,
+                            "prev_ID": 5,
+                            "next_ID": 7,
+                            "vertex_ID": 5,
+                            "edge_ID": 5,
+                            "loop_ID": 2
+                        },
+                        {
+                            "type": "HALF-EDGE",
+                            "ID": 7,
+                            "prev_ID": 6,
+                            "next_ID": 8,
+                            "vertex_ID": 7,
+                            "edge_ID": 6,
+                            "loop_ID": 2
+                        },
+                        {
+                            "type": "HALF-EDGE",
+                            "ID": 8,
+                            "prev_ID": 7,
+                            "next_ID": 1,
+                            "vertex_ID": 6,
+                            "edge_ID": 1,
+                            "loop_ID": 2
+                        }
+                    ],
+                    "isClosed": false
+                }
+            ],
+            "attributes": {
+                "isDeleted": false,
+                "mesh": null,
+                "att_names": []
+            }
+        },
+        {
+            "type": "FACE",
+            "ID": 1,
+            "prev_ID": 0,
+            "next_ID": 2,
+            "loop": {
+                "type": "LOOP",
+                "ID": 3,
+                "prev_ID": null,
+                "next_ID": null,
+                "face_ID": 1,
+                "he_loop": [
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 9,
+                        "prev_ID": 12,
+                        "next_ID": 10,
+                        "vertex_ID": 1,
+                        "edge_ID": 10,
+                        "loop_ID": 3
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 10,
+                        "prev_ID": 9,
+                        "next_ID": 11,
+                        "vertex_ID": 8,
+                        "edge_ID": 8,
+                        "loop_ID": 3
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 11,
+                        "prev_ID": 10,
+                        "next_ID": 12,
+                        "vertex_ID": 4,
+                        "edge_ID": 4,
+                        "loop_ID": 3
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 12,
+                        "prev_ID": 11,
+                        "next_ID": 9,
+                        "vertex_ID": 2,
+                        "edge_ID": 3,
+                        "loop_ID": 3
+                    }
+                ],
+                "isClosed": true
+            },
+            "intLoops": [],
+            "attributes": {
+                "isDeleted": false,
+                "mesh": {
+                    "type": "Mesh",
+                    "symbol": "Mesh",
+                    "name": "Quadrilateral Template",
+                    "coords": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        6.0,
+                        5.0,
+                        7.0,
+                        5.0,
+                        8.0,
+                        5.0,
+                        9.0,
+                        5.0,
+                        10.0,
+                        4.0,
+                        5.0,
+                        4.0,
+                        6.0,
+                        4.0,
+                        7.0,
+                        4.0,
+                        8.0,
+                        4.0,
+                        9.0,
+                        4.0,
+                        10.0,
+                        2.9999999999999996,
+                        5.0,
+                        3.0,
+                        6.0,
+                        3.0,
+                        7.0,
+                        3.0,
+                        8.0,
+                        3.0,
+                        9.0,
+                        3.0000000000000004,
+                        10.0,
+                        1.9999999999999996,
+                        5.0,
+                        2.0,
+                        6.0,
+                        2.0,
+                        7.0,
+                        2.0,
+                        8.0,
+                        2.0,
+                        9.0,
+                        2.0,
+                        10.0,
+                        1.0,
+                        5.0,
+                        1.0,
+                        6.0,
+                        1.0,
+                        7.0,
+                        1.0,
+                        8.0,
+                        1.0,
+                        9.0,
+                        1.0,
+                        10.0,
+                        0.0,
+                        5.0,
+                        0.0,
+                        6.0,
+                        0.0,
+                        7.0,
+                        0.0,
+                        8.0,
+                        0.0,
+                        9.0,
+                        0.0,
+                        10.0
+                    ],
+                    "conn": [
+                        4,
+                        0,
+                        1,
+                        7,
+                        6,
+                        4,
+                        1,
+                        2,
+                        8,
+                        7,
+                        4,
+                        2,
+                        3,
+                        9,
+                        8,
+                        4,
+                        3,
+                        4,
+                        10,
+                        9,
+                        4,
+                        4,
+                        5,
+                        11,
+                        10,
+                        4,
+                        6,
+                        7,
+                        13,
+                        12,
+                        4,
+                        7,
+                        8,
+                        14,
+                        13,
+                        4,
+                        8,
+                        9,
+                        15,
+                        14,
+                        4,
+                        9,
+                        10,
+                        16,
+                        15,
+                        4,
+                        10,
+                        11,
+                        17,
+                        16,
+                        4,
+                        12,
+                        13,
+                        19,
+                        18,
+                        4,
+                        13,
+                        14,
+                        20,
+                        19,
+                        4,
+                        14,
+                        15,
+                        21,
+                        20,
+                        4,
+                        15,
+                        16,
+                        22,
+                        21,
+                        4,
+                        16,
+                        17,
+                        23,
+                        22,
+                        4,
+                        18,
+                        19,
+                        25,
+                        24,
+                        4,
+                        19,
+                        20,
+                        26,
+                        25,
+                        4,
+                        20,
+                        21,
+                        27,
+                        26,
+                        4,
+                        21,
+                        22,
+                        28,
+                        27,
+                        4,
+                        22,
+                        23,
+                        29,
+                        28,
+                        4,
+                        24,
+                        25,
+                        31,
+                        30,
+                        4,
+                        25,
+                        26,
+                        32,
+                        31,
+                        4,
+                        26,
+                        27,
+                        33,
+                        32,
+                        4,
+                        27,
+                        28,
+                        34,
+                        33,
+                        4,
+                        28,
+                        29,
+                        35,
+                        34
+                    ],
+                    "properties": {
+                        "Element type": "Q4",
+                        "Number of nodes": 36,
+                        "Number of elements": 25
+                    },
+                    "properties_type": [
+                        "string",
+                        "int",
+                        "int"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": false,
+                    "applyOnFace": true
+                },
+                "att_names": [
+                    "M1",
+                    "T1"
+                ]
+            }
+        },
+        {
+            "type": "FACE",
+            "ID": 2,
+            "prev_ID": 1,
+            "next_ID": 3,
+            "loop": {
+                "type": "LOOP",
+                "ID": 4,
+                "prev_ID": null,
+                "next_ID": null,
+                "face_ID": 2,
+                "he_loop": [
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 13,
+                        "prev_ID": 16,
+                        "next_ID": 14,
+                        "vertex_ID": 7,
+                        "edge_ID": 7,
+                        "loop_ID": 4
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 14,
+                        "prev_ID": 13,
+                        "next_ID": 15,
+                        "vertex_ID": 1,
+                        "edge_ID": 2,
+                        "loop_ID": 4
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 15,
+                        "prev_ID": 14,
+                        "next_ID": 16,
+                        "vertex_ID": 3,
+                        "edge_ID": 1,
+                        "loop_ID": 4
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 16,
+                        "prev_ID": 15,
+                        "next_ID": 13,
+                        "vertex_ID": 6,
+                        "edge_ID": 6,
+                        "loop_ID": 4
+                    }
+                ],
+                "isClosed": true
+            },
+            "intLoops": [],
+            "attributes": {
+                "isDeleted": false,
+                "mesh": {
+                    "type": "Mesh",
+                    "symbol": "Mesh",
+                    "name": "Quadrilateral Template",
+                    "coords": [
+                        10.0,
+                        5.0,
+                        9.0,
+                        5.0,
+                        8.0,
+                        5.0,
+                        7.0,
+                        5.0,
+                        6.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        10.0,
+                        4.0,
+                        9.0,
+                        4.0,
+                        8.0,
+                        4.0,
+                        7.0,
+                        4.0,
+                        6.0,
+                        4.0,
+                        5.0,
+                        4.0,
+                        10.0,
+                        2.9999999999999996,
+                        9.0,
+                        3.0,
+                        8.0,
+                        3.0,
+                        7.0,
+                        3.0,
+                        6.0,
+                        3.0,
+                        5.0,
+                        3.0000000000000004,
+                        10.0,
+                        1.9999999999999996,
+                        9.0,
+                        2.0,
+                        8.0,
+                        2.0,
+                        7.0,
+                        2.0,
+                        6.0,
+                        2.0,
+                        5.0,
+                        2.0,
+                        10.0,
+                        1.0,
+                        9.0,
+                        1.0,
+                        8.0,
+                        1.0,
+                        7.0,
+                        1.0,
+                        6.0,
+                        1.0,
+                        5.0,
+                        1.0,
+                        10.0,
+                        0.0,
+                        9.0,
+                        0.0,
+                        8.0,
+                        0.0,
+                        7.0,
+                        0.0,
+                        6.0,
+                        0.0,
+                        5.0,
+                        0.0
+                    ],
+                    "conn": [
+                        4,
+                        0,
+                        1,
+                        7,
+                        6,
+                        4,
+                        1,
+                        2,
+                        8,
+                        7,
+                        4,
+                        2,
+                        3,
+                        9,
+                        8,
+                        4,
+                        3,
+                        4,
+                        10,
+                        9,
+                        4,
+                        4,
+                        5,
+                        11,
+                        10,
+                        4,
+                        6,
+                        7,
+                        13,
+                        12,
+                        4,
+                        7,
+                        8,
+                        14,
+                        13,
+                        4,
+                        8,
+                        9,
+                        15,
+                        14,
+                        4,
+                        9,
+                        10,
+                        16,
+                        15,
+                        4,
+                        10,
+                        11,
+                        17,
+                        16,
+                        4,
+                        12,
+                        13,
+                        19,
+                        18,
+                        4,
+                        13,
+                        14,
+                        20,
+                        19,
+                        4,
+                        14,
+                        15,
+                        21,
+                        20,
+                        4,
+                        15,
+                        16,
+                        22,
+                        21,
+                        4,
+                        16,
+                        17,
+                        23,
+                        22,
+                        4,
+                        18,
+                        19,
+                        25,
+                        24,
+                        4,
+                        19,
+                        20,
+                        26,
+                        25,
+                        4,
+                        20,
+                        21,
+                        27,
+                        26,
+                        4,
+                        21,
+                        22,
+                        28,
+                        27,
+                        4,
+                        22,
+                        23,
+                        29,
+                        28,
+                        4,
+                        24,
+                        25,
+                        31,
+                        30,
+                        4,
+                        25,
+                        26,
+                        32,
+                        31,
+                        4,
+                        26,
+                        27,
+                        33,
+                        32,
+                        4,
+                        27,
+                        28,
+                        34,
+                        33,
+                        4,
+                        28,
+                        29,
+                        35,
+                        34
+                    ],
+                    "properties": {
+                        "Element type": "Q4",
+                        "Number of nodes": 36,
+                        "Number of elements": 25
+                    },
+                    "properties_type": [
+                        "string",
+                        "int",
+                        "int"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": false,
+                    "applyOnFace": true
+                },
+                "att_names": [
+                    "M1",
+                    "T1"
+                ]
+            }
+        },
+        {
+            "type": "FACE",
+            "ID": 3,
+            "prev_ID": 2,
+            "next_ID": null,
+            "loop": {
+                "type": "LOOP",
+                "ID": 5,
+                "prev_ID": null,
+                "next_ID": null,
+                "face_ID": 3,
+                "he_loop": [
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 17,
+                        "prev_ID": 20,
+                        "next_ID": 18,
+                        "vertex_ID": 8,
+                        "edge_ID": 10,
+                        "loop_ID": 5
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 18,
+                        "prev_ID": 17,
+                        "next_ID": 19,
+                        "vertex_ID": 1,
+                        "edge_ID": 7,
+                        "loop_ID": 5
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 19,
+                        "prev_ID": 18,
+                        "next_ID": 20,
+                        "vertex_ID": 7,
+                        "edge_ID": 5,
+                        "loop_ID": 5
+                    },
+                    {
+                        "type": "HALF-EDGE",
+                        "ID": 20,
+                        "prev_ID": 19,
+                        "next_ID": 17,
+                        "vertex_ID": 5,
+                        "edge_ID": 9,
+                        "loop_ID": 5
+                    }
+                ],
+                "isClosed": true
+            },
+            "intLoops": [],
+            "attributes": {
+                "isDeleted": false,
+                "mesh": {
+                    "type": "Mesh",
+                    "symbol": "Mesh",
+                    "name": "Quadrilateral Template",
+                    "coords": [
+                        5.0,
+                        10.0,
+                        5.0,
+                        9.0,
+                        5.0,
+                        8.0,
+                        5.0,
+                        7.0,
+                        5.0,
+                        6.0,
+                        5.0,
+                        5.0,
+                        6.0,
+                        10.0,
+                        6.0,
+                        9.0,
+                        6.0,
+                        8.0,
+                        6.0,
+                        7.0,
+                        6.0,
+                        6.0,
+                        6.0,
+                        5.0,
+                        7.0,
+                        10.0,
+                        7.0,
+                        9.0,
+                        7.0,
+                        8.0,
+                        7.0,
+                        7.0,
+                        7.0,
+                        6.0,
+                        7.0,
+                        5.0,
+                        8.0,
+                        10.0,
+                        8.0,
+                        9.0,
+                        8.0,
+                        8.0,
+                        8.0,
+                        7.0,
+                        8.0,
+                        6.0,
+                        8.0,
+                        5.0,
+                        9.0,
+                        10.0,
+                        9.0,
+                        9.0,
+                        9.0,
+                        8.0,
+                        9.0,
+                        7.0,
+                        9.0,
+                        6.0,
+                        9.0,
+                        5.0,
+                        10.0,
+                        10.0,
+                        10.0,
+                        9.0,
+                        10.0,
+                        8.0,
+                        10.0,
+                        7.0,
+                        10.0,
+                        6.0,
+                        10.0,
+                        5.0
+                    ],
+                    "conn": [
+                        4,
+                        0,
+                        1,
+                        7,
+                        6,
+                        4,
+                        1,
+                        2,
+                        8,
+                        7,
+                        4,
+                        2,
+                        3,
+                        9,
+                        8,
+                        4,
+                        3,
+                        4,
+                        10,
+                        9,
+                        4,
+                        4,
+                        5,
+                        11,
+                        10,
+                        4,
+                        6,
+                        7,
+                        13,
+                        12,
+                        4,
+                        7,
+                        8,
+                        14,
+                        13,
+                        4,
+                        8,
+                        9,
+                        15,
+                        14,
+                        4,
+                        9,
+                        10,
+                        16,
+                        15,
+                        4,
+                        10,
+                        11,
+                        17,
+                        16,
+                        4,
+                        12,
+                        13,
+                        19,
+                        18,
+                        4,
+                        13,
+                        14,
+                        20,
+                        19,
+                        4,
+                        14,
+                        15,
+                        21,
+                        20,
+                        4,
+                        15,
+                        16,
+                        22,
+                        21,
+                        4,
+                        16,
+                        17,
+                        23,
+                        22,
+                        4,
+                        18,
+                        19,
+                        25,
+                        24,
+                        4,
+                        19,
+                        20,
+                        26,
+                        25,
+                        4,
+                        20,
+                        21,
+                        27,
+                        26,
+                        4,
+                        21,
+                        22,
+                        28,
+                        27,
+                        4,
+                        22,
+                        23,
+                        29,
+                        28,
+                        4,
+                        24,
+                        25,
+                        31,
+                        30,
+                        4,
+                        25,
+                        26,
+                        32,
+                        31,
+                        4,
+                        26,
+                        27,
+                        33,
+                        32,
+                        4,
+                        27,
+                        28,
+                        34,
+                        33,
+                        4,
+                        28,
+                        29,
+                        35,
+                        34
+                    ],
+                    "properties": {
+                        "Element type": "Q4",
+                        "Number of nodes": 36,
+                        "Number of elements": 25
+                    },
+                    "properties_type": [
+                        "string",
+                        "int",
+                        "int"
+                    ],
+                    "applyOnVertex": false,
+                    "applyOnEdge": false,
+                    "applyOnFace": true
+                },
+                "att_names": [
+                    "M1",
+                    "T1"
+                ]
+            }
+        }
+    ],
+    "attributes_list": [
+        {
+            "type": "Material",
+            "symbol": "Material",
+            "name": "M1",
+            "properties": {
+                "YoungsModulus": 206000.0,
+                "PoisonsRatio": 0.3,
+                "Conductivity": 0.0,
+                "SpecificHeat": 0.0,
+                "Color": [
+                    128,
+                    191,
+                    128
+                ]
+            },
+            "applyOnVertex": false,
+            "applyOnEdge": false,
+            "applyOnFace": true,
+            "properties_type": [
+                "float",
+                "float",
+                "float",
+                "float",
+                "color"
+            ]
+        },
+        {
+            "type": "Thickness",
+            "symbol": "Thickness",
+            "name": "T1",
+            "properties": {
+                "Value": 1.0
+            },
+            "applyOnVertex": false,
+            "applyOnEdge": false,
+            "applyOnFace": true,
+            "properties_type": [
+                "float"
+            ]
+        },
+        {
+            "type": "Uniform Load",
+            "symbol": "Arrow",
+            "name": "UL1",
+            "properties": {
+                "Qx": 0.0,
+                "Qy": 300.0,
+                "Direction": {
+                    "list": [
+                        "Global",
+                        "Local"
+                    ],
+                    "index": 0
+                },
+                "Color": [
+                    255,
+                    0,
+                    0
+                ]
+            },
+            "applyOnVertex": false,
+            "applyOnEdge": true,
+            "applyOnFace": false,
+            "properties_type": [
+                "float",
+                "float",
+                "options",
+                "color"
+            ]
+        },
+        {
+            "type": "Support Conditions",
+            "symbol": "Support",
+            "name": "CC1",
+            "properties": {
+                "Dx": false,
+                "Dx pos": {
+                    "list": [
+                        "Left",
+                        "Right"
+                    ],
+                    "index": 0
+                },
+                "Dx value": 0.0,
+                "Dy": true,
+                "Dy pos": {
+                    "list": [
+                        "Down",
+                        "Up"
+                    ],
+                    "index": 0
+                },
+                "Dy value": 0.0,
+                "Rz": false,
+                "Rz value": 0.0,
+                "Color": [
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "applyOnVertex": true,
+            "applyOnEdge": true,
+            "applyOnFace": false,
+            "properties_type": [
+                "bool",
+                "options",
+                "float",
+                "bool",
+                "options",
+                "float",
+                "bool",
+                "float",
+                "color"
+            ]
+        },
+        {
+            "type": "Support Conditions",
+            "symbol": "Support",
+            "name": "CC2",
+            "properties": {
+                "Dx": true,
+                "Dx pos": {
+                    "list": [
+                        "Left",
+                        "Right"
+                    ],
+                    "index": 0
+                },
+                "Dx value": 0.0,
+                "Dy": false,
+                "Dy pos": {
+                    "list": [
+                        "Down",
+                        "Up"
+                    ],
+                    "index": 0
+                },
+                "Dy value": 0.0,
+                "Rz": false,
+                "Rz value": 0.0,
+                "Color": [
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "applyOnVertex": true,
+            "applyOnEdge": true,
+            "applyOnFace": false,
+            "properties_type": [
+                "bool",
+                "options",
+                "float",
+                "bool",
+                "options",
+                "float",
+                "bool",
+                "float",
+                "color"
+            ]
+        }
+    ]
+}
