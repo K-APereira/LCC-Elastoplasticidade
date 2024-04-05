@@ -1,0 +1,36 @@
+{
+    "Props":{
+        "E": 206000,
+        "v": 0.3,
+        "Thickness": 1,
+        "YieldStress": 450
+    },
+
+    "PlaneStressOrStrain": "Plane Stress",
+
+    "DoFNode": 2,
+
+    "NodesCoord":[
+        [0.0, 0.0],
+        [0.5, 0.0],
+        [1,0, 0.0]
+    ],
+
+    "Elements":[
+        [1,2],
+        [2,3]
+    ],
+
+    "Restrs":[
+        [1,1,1]
+    ],
+
+    "Forces":[
+        [2,2,3,50,0]
+    ],
+
+    "N_Steps": 4,
+
+    "NGP": 2
+    
+}
