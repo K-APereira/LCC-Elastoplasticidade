@@ -23,4 +23,4 @@ end
 ########################################
 # main("Exemplo1.json")
 #run with timer
-@time main("Exemplo1.json")
+@time main("Julia/Exemplo1.json")
