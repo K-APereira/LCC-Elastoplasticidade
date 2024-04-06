@@ -19,10 +19,43 @@ module MEF
 
         x1 = 0
         for i in eachindex(Forces)
+
+            # calculates the area where the force is being applied
             x1 = NodesCoord[Int(Forces[i][2])][1]
+            x2 = NodesCoord[Int(Forces[i][3])][1]
+            deltaX = abs(x1-x2)
+
+            y1 = NodesCoord[Int(Forces[i][2])][2]
+            y2 = NodesCoord[Int(Forces[i][3])][2]
+            deltaY = abs(y1-y2)
+
+            r = ((deltaX^2)+(deltaY^2))^0.5
+
+            # if there is force in X, add to the vector F
+            if Forces[i][4] != 0
+                F_Node = (Forces[i][4] * r)/2 # half force for each node
+
+                Node = 2 * Forces[i][1]
+                F[Node,1] += F_Node
+                Node = 2 * Forces[i][2]
+                F[Node,1] += F_Node
+                
+            end
+
+            # if there is force in Y, add to the vector F
+            if Forces[i][5] != 0
+                F_Node = (Forces[i][5] * r)/2 # half force for each node
+
+                Node = 2 * Forces[i][1]+1
+                F[Node,1] += F_Node
+                Node = 2 * Forces[i][2]+1
+                F[Node,1] += F_Node
+                
+            end
+
         end
 
 
-        return D, total_sigma,(x1)
+        return D, total_sigma,F
     end
 end

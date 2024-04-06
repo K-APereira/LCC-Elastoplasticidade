@@ -12,9 +12,9 @@ function main(meshInput)
     
     assmtrx = meshReader.Create_AssembMtrx(N_NodesInElem, N_Elems, Connect, DoFNode)
 
-    print(Forces)
-
     (D, sigma_total, j2Elem) = MEF.Mef_ep(N_DoF, N_Steps, N_Elems, Connect, N_NodesInElem, NGP, NodesCoord, DoFNode, Props, PlaneStressOrStrain, assmtrx, Forces, Restrs)
+
+    print(typeof(j2Elem))
 end
 
 
