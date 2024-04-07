@@ -14,7 +14,7 @@ function main(meshInput)
 
     (D, sigma_total, j2Elem) = MEF.Mef_ep(N_DoF, N_Steps, N_Elems, Connect, N_NodesInElem, NGP, NodesCoord, DoFNode, Props, PlaneStressOrStrain, assmtrx, Forces, Restrs)
 
-    print(typeof(j2Elem))
+    print(j2Elem)
 end
 
 

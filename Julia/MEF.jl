@@ -35,9 +35,9 @@ module MEF
             if Forces[i][4] != 0
                 F_Node = (Forces[i][4] * r)/2 # half force for each node
 
-                Node = 2 * Forces[i][1]
+                Node = 2 * Forces[i][2] - 1
                 F[Node,1] += F_Node
-                Node = 2 * Forces[i][2]
+                Node = 2 * Forces[i][3] - 1
                 F[Node,1] += F_Node
                 
             end
@@ -46,9 +46,9 @@ module MEF
             if Forces[i][5] != 0
                 F_Node = (Forces[i][5] * r)/2 # half force for each node
 
-                Node = 2 * Forces[i][1]+1
+                Node = 2 * Forces[i][2]
                 F[Node,1] += F_Node
-                Node = 2 * Forces[i][2]+1
+                Node = 2 * Forces[i][3]
                 F[Node,1] += F_Node
                 
             end
