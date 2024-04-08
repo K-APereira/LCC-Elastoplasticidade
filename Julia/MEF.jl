@@ -7,7 +7,7 @@ module MEF
         location = zeros(NGP)
         weight = zeros(NGP)
 
-        # filling the vectors for each order
+        # filling the vectors for each number of gauss points
         if NGP == 1
             location[1] = 0
             weight[1] = 2
@@ -102,9 +102,11 @@ module MEF
         end
 
         # Getting Gauss points locations and weights
-        (csi1, w1) = Gauss_Pts(NGP)
+        (GP_locations, GP_weights) = Gauss_Pts(NGP)
+
+        # start
 
 
-        return D, total_sigma,(csi1,w1)
+        return D, total_sigma,(GP_locations, GP_weights)
         end
     end
