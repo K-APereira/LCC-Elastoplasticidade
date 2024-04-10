@@ -14,7 +14,7 @@ inicio = timeit.default_timer()
 # Atribuição de variáveis de acordo com a saída de dados da função "readmesh"
 
 [NODES,coord_nodes,num_restrs,restrs,num_isomat,props,num_thick,elem_nodes,NELE,connect,Dofnode\
-        ,dofelem,NDoF,forces,nstep,planestress,NGP] = readmesh('Exemplo 3.3.2 - 256 elementos.txt', "Model_Tk.nf")
+        ,dofelem,NDoF,forces,nstep,planestress,NGP] = readmesh('python/Exemplo 3.3.2 - 256 elementos.txt', "python/Model_Tk.nf")
 
 
 # Atribuição de variáveis de acordo com a saída de dados da função "dofdrive"

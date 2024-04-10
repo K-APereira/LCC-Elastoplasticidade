@@ -44,6 +44,12 @@ module MEF
         return location, weight
     end
     
+    function ConstMtrx(PlaneStressOrStrain, Props)
+
+        C = zeros((3,3))
+
+        return C
+    end
 
 
     # function that calculates the Finite Elements method in elastoplastics conditions
@@ -51,12 +57,12 @@ module MEF
         
         # Setting matrix for function's use
 
-        F = zeros((N_DoF,1)) # total force for node
-        f_ext = zeros((N_DoF,1)) # external force for node in each step
+        F = zeros((N_DoF)) # total force for node
+        f_ext = zeros((N_DoF)) # external force for node in each step
         total_sigma = zeros((3, NGP * NGP * N_Elems)) # stress tensor
-        D = zeros((N_DoF,1)) # total displacement
-        dD = zeros((N_DoF,1)) # displacement for step
-        dD_Elem = zeros((DoFNode,1)) # elements' displacement for step
+        D = zeros((N_DoF)) # total displacement
+        dD = zeros((N_DoF)) # displacement for step
+        dD_Elem = zeros((DoFNode)) # elements' displacement for step
         XY_Elem = zeros((N_NodesInElem, 2)) # elemets' coords
         if_Plast = zeros(Bool,(N_Elems,NGP*NGP)) # state of each gauss point for elem
         tolD = 0.001 # displacement increment tolerance
@@ -82,9 +88,9 @@ module MEF
                 F_Node = (Forces[i][4] * r)/2 # half force for each node
 
                 Node = 2 * Forces[i][2] - 1
-                F[Node,1] += F_Node
+                F[Node] += F_Node
                 Node = 2 * Forces[i][3] - 1
-                F[Node,1] += F_Node
+                F[Node] += F_Node
                 
             end
 
@@ -93,9 +99,9 @@ module MEF
                 F_Node = (Forces[i][5] * r)/2 # half force for each node
 
                 Node = 2 * Forces[i][2]
-                F[Node,1] += F_Node
+                F[Node] += F_Node
                 Node = 2 * Forces[i][3]
-                F[Node,1] += F_Node
+                F[Node] += F_Node
                 
             end
 
@@ -104,9 +110,12 @@ module MEF
         # Getting Gauss points locations and weights
         (GP_locations, GP_weights) = Gauss_Pts(NGP)
 
-        # start
+        # loop parameters start
+        f_incr = F / N_Steps # incremental force for each step
+        ky = fy / sqrt(3) # material's yield stress in pure shear (used in von Mises yield criterion)
+        Cel = ConstMtrx(PlaneStressOrStrain, Props)
 
 
-        return D, total_sigma,(GP_locations, GP_weights)
+        return D, total_sigma,f_incr
         end
     end
