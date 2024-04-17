@@ -10,11 +10,9 @@ function main(meshInput)
     (N_Nodes,NodesCoord,N_Restrs,Restrs,Props,N_NodesInElem,N_Elems,Connect,DoFNode,
     DoFElem,N_DoF,Forces,N_Steps,PlaneStressOrStrain,NGP) = meshReader.readMesh(meshInput)
     
-    assmtrx = meshReader.Create_AssembMtrx(N_NodesInElem, N_Elems, Connect, DoFNode)
+    assmtrx = meshReader.Create_AssembMtrx(N_NodesInElem, N_Elems, Connect, DoFElem)
 
-    (D, sigma_total, j2Elem) = MEF.FEM_Ep(N_DoF, N_Steps, N_Elems, Connect, N_NodesInElem, NGP, NodesCoord, DoFNode, Props, PlaneStressOrStrain, assmtrx, Forces, Restrs)
-
-    print(j2Elem)
+    (D, sigma_total, j2Elem) = MEF.FEM_Ep(N_DoF, N_Steps, N_Elems, Connect, N_NodesInElem, NGP, NodesCoord, DoFElem, Props, PlaneStressOrStrain, assmtrx, Forces, Restrs)
     
 end
 

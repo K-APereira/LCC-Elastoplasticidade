@@ -32,7 +32,7 @@ Y = coord_nodes[:,[2]]
 #print(type(connect[0, 0]))
 
 # Atribuição de variáveis de acordo com a saída de dados da função "viewmesh"
-#viewmesh(XY, connect, elem_nodes)
+viewmesh(XY, connect, elem_nodes)
 
 # Atribuição de variáveis auxiliares de acordo com a saída de dados da função "readmesh"
 E = props[0, 0]
@@ -48,7 +48,7 @@ fy = props[0, 3]
 print(D, sigma_total)
 
 # Atribuição de variáveis de acordo com a saída de dados da função "viewmesh" e "MEF_ep"
-#viewdeformedmesh(XY, connect, D, 10,elem_nodes)
+viewdeformedmesh(XY, connect, D, 10,elem_nodes)
 
 viewcolormesh(XY, connect, elem_nodes, j2Elem)
 

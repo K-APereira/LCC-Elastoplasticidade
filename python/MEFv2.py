@@ -238,7 +238,7 @@ def get_globalK(Nnodes, NGP, t, NELE, dofelem, assmtrx, restrs, NDoF, X, Y, ifPl
             XYelem[i, 1] = Y[int(connect[i, iele]), 0]
 
         for i in range(numPts):
-
+ 
         # Obtém as derivadas das funções de forma em relação às coordenadas naturais
             [dNdcsi, dNdeta] = DerivFuncFormaNat(csi[i], eta[i], Nnodes)
 
