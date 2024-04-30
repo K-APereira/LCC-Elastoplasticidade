@@ -1,8 +1,8 @@
 module MEF
+using LinearAlgebra
 
     # function that calculates the gauss points to integrate in FEM_Ep
     function Gauss_Pts(NGP)
-
         # setting the vector of gauss points' locations and weights
         location = zeros(NGP)
         weight = zeros(NGP)
@@ -40,7 +40,6 @@ module MEF
             weight[4] = 0.347854845137454
 
         end
-
         return location, weight
     end
     
@@ -83,6 +82,7 @@ module MEF
         return C
     end
 
+    # function that get the isoparamétrics elements derivates
     function DerivNatShapeFunc(csi, eta,N_NodesInElem)
         dNdcsi = zeros(N_NodesInElem)
         dNdeta = zeros(N_NodesInElem)
@@ -113,7 +113,7 @@ module MEF
             dNdeta[3] = 0.25 * dPxs - 0.5 * (dNdeta[6] + dNdeta[7])
             dNdeta[4] = 0.25 * dMxs - 0.5 * (dNdeta[7] + dNdeta[8])
 
-        elseif Nnodes == 4
+        elseif N_NodesInElem == 4
             dPet = 1 + eta
             dMet = 1 - eta
             dPxs = 1 + csi
@@ -134,6 +134,22 @@ module MEF
     
     end
 
+    # function that calculates the Jacobian matrix between natural and cartesian coords
+    function JacMat(dNdcsi, dNdeta, XY_Elem)
+        xelem = XY_Elem[:,1]
+        yelem = XY_Elem[:,2]
+
+        dxdcsi = LinearAlgebra.dot(dNdcsi,xelem)
+        dxdeta = LinearAlgebra.dot(dNdeta, xelem)
+        dydcsi = LinearAlgebra.dot(dNdcsi, yelem)
+        dydeta = LinearAlgebra.dot(dNdeta, yelem)
+
+        Jac = [[dxdcsi dydcsi],
+        [dxdeta, dydeta]]
+
+        return Jac
+    end
+
     # function that returns the global stiffness matrix and the internal forces
     function Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, assmtrx, Restrs, N_DoF, NodesCoord, if_Plast,
         csi, eta, w, Cel, total_sigma, Connect, f_int, dD)
@@ -151,12 +167,16 @@ module MEF
 
             # get the element i_elem nodes coords
             for i_node in 1:N_NodesInElem
-                XY_Elem[i,:] = NodesCoord[int(Connect[i_elem,i_node]),:]
+                # println(Connect[i_elem][i_node])-
+                XY_Elem[i_node,:] = NodesCoord[(Connect[i_elem][i_node])]
             end
 
             for i in 1:N_points
                 # get the shape form functions derivates in natural coords
                 dNdcsi, dNdeta = DerivNatShapeFunc(csi, eta,N_NodesInElem)
+
+                #get the jacobian matrix
+                Jac = JacMat(dNdcsi, dNdeta, XY_Elem)
             end
         end
 
@@ -221,7 +241,7 @@ module MEF
 
         # Getting Gauss points locations and weights
         (GP_locations, GP_weights) = Gauss_Pts(NGP)
-        k2 = 0
+        k2 = 1
         csi = zeros(NGP*NGP)
         eta = zeros(NGP*NGP)
         w = zeros(NGP*NGP)

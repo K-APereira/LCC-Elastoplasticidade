@@ -11,20 +11,20 @@ module meshReader
 
         ###### MODEL
         # Read the nodes coordinates (X,Y)
-        NodesCoord = JsonData["NodesCoord"]
+        NodesCoord = copy(JsonData["NodesCoord"])
         N_Nodes = length(NodesCoord)
 
         # Read the elements connection (left_down, right_down, right_top, left_top)
-        Connect = JsonData["Elements"]
+        Connect = copy(JsonData["Elements"])
         N_Elems = length(Connect)
         N_NodesInElem = length(Connect[1])
 
         # Read the nodes restrictions (NodeId, bool X lock, bool Y lock)
-        Restrs = JsonData["Restrs"]
+        Restrs = copy(JsonData["Restrs"])
         N_Restrs = length(Restrs)
 
         # Read the loads (ElemId, NodeId1, NodeId2, Force in X, Force in Y)
-        Forces = JsonData["Forces"]
+        Forces = copy(JsonData["Forces"])
 
         # Read if the model is using Plane stress or Plane strain
         PlaneStressOrStrain = JsonData["PlaneStressOrStrain"]
