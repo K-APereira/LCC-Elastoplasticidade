@@ -167,7 +167,6 @@ using LinearAlgebra
 
             # get the element i_elem nodes coords
             for i_node in 1:N_NodesInElem
-                # println(Connect[i_elem][i_node])-
                 XY_Elem[i_node,:] = NodesCoord[(Connect[i_elem][i_node])]
             end
 
