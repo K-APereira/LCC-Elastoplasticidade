@@ -144,10 +144,36 @@ using LinearAlgebra
         dydcsi = LinearAlgebra.dot(dNdcsi, yelem)
         dydeta = LinearAlgebra.dot(dNdeta, yelem)
 
-        Jac = [[dxdcsi dydcsi],
-        [dxdeta, dydeta]]
+        Jac = [dxdcsi dydcsi; 
+               dxdeta dydeta]
 
         return Jac
+    end
+
+    # function that transforms the natural coords derivates in cartesian derivates
+    function DerivCartShapeFunc(dNdcsi, dNdeta, Jac, N_NodesInElem)
+        dNnat = zeros((2,N_NodesInElem))
+
+        for i in 1:N_NodesInElem
+            dNnat[1,i] = dNdcsi[i]
+            dNnat[2,i] = dNdeta[i]
+        end
+
+        dNdcart = inv(Jac) * dNnat
+
+        return dNdcart
+    end
+
+    function MatDefDesloc(dNdcart, N_NodesInElem)
+        B = zeros((3,N_NodesInElem*2))
+        
+        for i in 1:N_NodesInElem
+            B[1,2*i-1] = dNdcart[1,i]
+            B[2,2*i] = dNdcart[2,i]
+            B[3,2*i-1] = dNdcart[2,i]
+            B[3,2*i] = dNdcart[1,i]
+        end
+        return B
     end
 
     # function that returns the global stiffness matrix and the internal forces
@@ -172,10 +198,18 @@ using LinearAlgebra
 
             for i in 1:N_points
                 # get the shape form functions derivates in natural coords
-                dNdcsi, dNdeta = DerivNatShapeFunc(csi, eta,N_NodesInElem)
+                dNdcsi, dNdeta = DerivNatShapeFunc(csi[i], eta[i],N_NodesInElem)
 
                 #get the jacobian matrix
                 Jac = JacMat(dNdcsi, dNdeta, XY_Elem)
+
+                dNdcart = DerivCartShapeFunc(dNdcsi, dNdeta, Jac, N_NodesInElem)
+
+                B = MatDefDesloc(dNdcart, N_NodesInElem)
+
+                J = LinearAlgebra.det(Jac)
+
+                Bt = transpose(B)
             end
         end
 
