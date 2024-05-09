@@ -177,10 +177,11 @@ using LinearAlgebra
     end
 
     # function that returns the global stiffness matrix and the internal forces
-    function Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, assmtrx, Restrs, N_DoF, NodesCoord, if_Plast,
-        csi, eta, w, Cel, total_sigma, Connect, f_int, dD)
+    function Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
+        csi, eta, w, Cel, sigma_total, Connect, f_ext, dD)
         
         K = zeros((N_DoF,N_DoF)) #stiffness matrix
+        f_int = zeros(N_DoF)
         XY_Elem = zeros(N_NodesInElem, 2) # elemets' coords
         dD_Elem = zeros(DoFElem) # displacement of the nodes in one element
         N_points = NGP*NGP # number of integration points
@@ -196,9 +197,9 @@ using LinearAlgebra
                 XY_Elem[i_node,:] = NodesCoord[(Connect[i_elem][i_node])]
             end
 
-            for i in 1:N_points
+            for integ_points in 1:N_points
                 # get the shape form functions derivates in natural coords
-                dNdcsi, dNdeta = DerivNatShapeFunc(csi[i], eta[i],N_NodesInElem)
+                dNdcsi, dNdeta = DerivNatShapeFunc(csi[integ_points], eta[integ_points],N_NodesInElem)
 
                 #get the jacobian matrix
                 Jac = JacMat(dNdcsi, dNdeta, XY_Elem)
@@ -210,6 +211,43 @@ using LinearAlgebra
                 J = LinearAlgebra.det(Jac)
 
                 Bt = transpose(B)
+
+                if if_Plast[i_elem,integ_points] == 1
+
+                    sigma_xx = sigma_total[1,i_sigma+integ_points]
+                    sigma_yy = sigma_total[2,i_sigma+integ_points]
+                    sigma_xy = sigma_total[3,i_sigma+integ_points]
+                    df = [(2*sigma_xx-sigma_yy)/3 (2*sigma_yy - sigma_xx)/3 2*sigma_xy]
+                    C = Cel - (Cel * df * transpose(df) * Cel)/(transpose(df) * Cel * df)
+                else
+                    C = Cel
+                end
+
+                K_elem += Bt* C * B * J * Props["Thickness"] * w[integ_points]
+                f_int_elem +=  Bt * sigma_total[:, i_sigma+integ_points] * J * Props["Thickness"] * w[integ_points]
+                
+                for i_dof in 1:DoFElem
+                    for j_dof in 1:DoFElem
+                        # (Connect[i_elem][(i_dof-1)÷DoFNode+1]-1) is number of nodes behind current
+                        # (i_dof-1)%DoFNode+1 gets the dof index of current node
+                        K[(Connect[i_elem][(i_dof-1)÷DoFNode+1]-1)*DoFNode+((i_dof-1)%DoFNode+1),(Connect[i_elem][(j_dof-1)÷DoFNode+1]-1)*DoFNode+((j_dof-1)%DoFNode+1)] += K_elem[i_dof,j_dof]
+                    end
+                    f_int[(Connect[i_elem][(i_dof-1)÷DoFNode+1]-1)*DoFNode+((i_dof-1)%DoFNode+1)] += f_int_elem[i_dof]
+                end
+
+                for i_rest in Restrs
+                    # restricted Node
+                    rest_node = i_rest[1]
+                    # if there is a restriction on i_dof
+                    for i_dof in 1:DoFNode
+                        if i_rest[i_dof+1] == 1
+                            K[(Connect[i_elem][rest_node]-1)*DoFNode+i_dof,:] = zeros(N_DoF)
+                            K[(Connect[i_elem][rest_node]-1)*DoFNode+i_dof,(Connect[i_elem][rest_node]-1)*DoFNode+i_dof] = 1
+                            f_int[(Connect[i_elem][rest_node]-1)*DoFNode+i_dof] = f_ext[(Connect[i_elem][rest_node]-1)*DoFNode+i_dof]
+                        end
+                    end
+                end
+
             end
         end
 
@@ -217,13 +255,13 @@ using LinearAlgebra
     end
 
     # function that calculates the Finite Elements method in elastoplastics conditions
-    function FEM_Ep(N_DoF, N_Steps, N_Elems, Connect, N_NodesInElem, NGP, NodesCoord, DoFElem, Props, PlaneStressOrStrain, assmtrx, Forces, Restrs)
+    function FEM_Ep(N_DoF, N_Steps, N_Elems, Connect, N_NodesInElem, NGP, NodesCoord, DoFElem, Props, PlaneStressOrStrain, DoFNode, Forces, Restrs)
         
         # Setting matrix for function's use
 
         F = zeros((N_DoF)) # total force for node
         f_ext = zeros((N_DoF)) # external force for node in each step
-        total_sigma = zeros((3, NGP * NGP * N_Elems)) # stress tensor
+        sigma_total = zeros((3, NGP * NGP * N_Elems)) # stress tensor
         D = zeros((N_DoF)) # total displacement
         dD = zeros((N_DoF)) # displacement for step
         dD_Elem = zeros((DoFElem)) # elements' displacement for step
@@ -293,27 +331,90 @@ using LinearAlgebra
         Cel = ConstMtrx(PlaneStressOrStrain, Props)
 
 
-        # start Newthon-Raphson method to calculate the displacement
         for i_step in 1:N_Steps
             f_ext += f_incr
             count = 0
             maxdD = 11
 
+            # start Newthon-Raphson method to calculate the displacement
             while maxdD > tolD
-                # internal forces f_int
-                f_int = zeros(N_DoF)
                 # calculate the stiffness matrix K and the internal forces f_int
-                (K, f_int) = Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, assmtrx, Restrs, N_DoF, NodesCoord, if_Plast,
-                csi, eta, w, Cel, total_sigma, Connect, f_int, dD)
+                (K, f_int) = Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
+                csi, eta, w, Cel, sigma_total, Connect, f_ext, dD)
                 b = f_ext - f_int
                 dD = inv(K)*b
 
                 maxdD = 0
-            
+
+                N_points = NGP*NGP # number of integration points
+
+                for i_elem in 1:N_Elems
+
+                    i_sigma = (i_elem-1)*N_points
+        
+        
+                    # get the element i_elem nodes coords
+                    for i_node in 1:N_NodesInElem
+                        XY_Elem[i_node,:] = NodesCoord[(Connect[i_elem][i_node])]
+                    end
+        
+                    for integ_points in 1:N_points
+                        # get the shape form functions derivates in natural coords
+                        dNdcsi, dNdeta = DerivNatShapeFunc(csi[integ_points], eta[integ_points],N_NodesInElem)
+        
+                        #get the jacobian matrix
+                        Jac = JacMat(dNdcsi, dNdeta, XY_Elem)
+        
+                        dNdcart = DerivCartShapeFunc(dNdcsi, dNdeta, Jac, N_NodesInElem)
+        
+                        B = MatDefDesloc(dNdcart, N_NodesInElem)
+        
+                        if if_Plast[i_elem,integ_points] == 1
+        
+                            sigma_xx = sigma_total[1,i_sigma+integ_points]
+                            sigma_yy = sigma_total[2,i_sigma+integ_points]
+                            sigma_xy = sigma_total[3,i_sigma+integ_points]
+                            df = [(2*sigma_xx-sigma_yy)/3 (2*sigma_yy - sigma_xx)/3 2*sigma_xy]
+                            C = Cel - (Cel * df * transpose(df) * Cel)/(transpose(df) * Cel * df)
+                        else
+                            C = Cel
+                        end
+
+                        strain = B * dD_Elem
+                        d_sigma = C * strain
+                        println(d_sigma)
+                        # sigma_xx = sigma_total[1,i_sigma+integ_points] + d_sigma[1]
+                        # sigma_yy = sigma_total[2,i_sigma+integ_points] + d_sigma[2]
+                        # sigma_xy = sigma_total[3,i_sigma+integ_points] + d_sigma[3]
+                        sigma_xx,sigma_yy,sigma_xy = sigma_total[:,i_sigma+integ_points] + d_sigma
+                        # von Mises criterion
+                        J2 = 1/6 * ((sigma_xx-sigma_yy)^2 + sigma_yy^2 + sigma_xx^2) + sigma_xy^2
+                        f_yield = J2 - ky^2
+                        J2Elem[i_elem] += sqrt(J2)
+
+                        if f_yield > 0
+                            sigma_trial = sigma_total[:,i_sigma+integ_points]
+                            k_trial = sqrt(J2)
+                            sigma_mean = [(sigma_xx + sigma_yy) / 3, (sigma_xx + sigma_yy) / 3, 0]
+                            dev = sigma_trial-sigma_mean
+                            aux = ky/k_trial*dev
+                            sigma_total[:, i_sigma+integ_points] = aux + sigma_mean
+                            if_Plast[i_elem,integ_points] = 1
+                        else
+                            sigma_total[:,i_sigma + integ_points] += d_sigma
+                            if_Plast[i_elem,integ_points] = 0
+                        end
+                    end
+                end
+                D += dD
+                maxdD,_ = findmax(dD)
+                maxdD = abs(maxdD)
+                count +=1
+                println(count)
             end
         end
 
 
-        return D, total_sigma, dD
+        return D, sigma_total, J2Elem
         end
     end

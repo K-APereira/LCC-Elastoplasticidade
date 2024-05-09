@@ -14,7 +14,7 @@ inicio = timeit.default_timer()
 # Atribuição de variáveis de acordo com a saída de dados da função "readmesh"
 
 [NODES,coord_nodes,num_restrs,restrs,num_isomat,props,num_thick,elem_nodes,NELE,connect,Dofnode\
-        ,dofelem,NDoF,forces,nstep,planestress,NGP] = readmesh('python/Exemplo 3.3.2 - 256 elementos.txt', "python/Model_Tk.nf")
+        ,dofelem,NDoF,forces,nstep,planestress,NGP] = readmesh('python/Exemplo 1.1 - 100 elementos.txt', "python/Model_Tk.nf")
 
 
 # Atribuição de variáveis de acordo com a saída de dados da função "dofdrive"
@@ -46,6 +46,7 @@ fy = props[0, 3]
 # Atribuição de variáveis de acordo com a saída de dados da função "MEF_ep"
 [D, sigma_total, j2Elem] = MEF_ep(NDoF, nstep, NELE, connect, elem_nodes, NGP, X, Y, dofelem, t, v, E, planestress, assmtrx, fy, forces, restrs)
 print(D, sigma_total)
+
 
 # Atribuição de variáveis de acordo com a saída de dados da função "viewmesh" e "MEF_ep"
 viewdeformedmesh(XY, connect, D, 10,elem_nodes)
