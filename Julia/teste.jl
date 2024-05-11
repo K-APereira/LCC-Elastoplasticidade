@@ -1,3 +1,1 @@
-a = 3
-
-sqrt(a)
+a = false

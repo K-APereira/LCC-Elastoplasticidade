@@ -45,29 +45,49 @@ module meshReader
         DoFElem,N_DoF,Forces,N_Steps,PlaneStressOrStrain,NGP)
     end
 
-    # function that creates the Assembly matrix
-    # Assembly matrix generates global Id for DoF for each node
-    function Create_AssembMtrx(N_NodesInElem, N_Elems, Connect, DoFNode)
-        
-        # Create the Assembly matrix with zeros
-        AssembMtrx = zeros(Int,(N_Elems,N_NodesInElem*DoFNode))
 
+    function write_results(filepath, results...;pretty = false)
+        data = Dict()
+        for i in results
+            data[i[1]] = i[2]
+        end
+        file = open(filepath,"w")
+        if pretty
+            pretty_json(data,file)
+        else
+            JSON3.write(file,data)
+        end
+        close(file)
+    end
 
-        # Fills the matrix with global Id for each DoF for element
-        for i_elem in 1:N_Elems
-            ildof = 1
-            for i_node in 1:N_NodesInElem
-                # For element, for node in this element, get the node Id
-                IdNode = Connect[i_elem][i_node]
-                
-                # For each node, alocate a global Id for its degrees of freedom
-                for i_dof in 1:DoFNode
-                    AssembMtrx[i_elem,ildof] = DoFNode*(IdNode-1) + i_dof
-                    ildof = ildof+1
+    function pretty_json(data,f,indent=0)
+        if data isa Dict
+            write(f,"\n","    "^indent,"{")
+            for (key,value) in data
+                write(f,"\n","    "^(indent+1),"\"",key,"\"",": ")
+                pretty_json(value,f,indent+1)
+                if last(collect(keys(data))) != key
+                    write(f,",")
                 end
+                write(f,"\n")
+            end
+            write(f,"    "^indent,"}")
+        elseif data isa Array
+            write(f,"\n","    "^indent,"[")
+            for i in data[1: length(data)-1]
+                pretty_json(i,f,indent+1)
+                write(f,", ")
+            end
+            if length(data)>0
+                pretty_json(data[length(data)],f,indent+1)
+            end
+            write(f,"]")
+        else
+            if data isa String
+                write(f,"\"",data,"\"")
+            else
+                write(f,string(data))
             end
         end
-
-        return AssembMtrx
     end
 end

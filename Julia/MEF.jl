@@ -241,9 +241,9 @@ using LinearAlgebra
                     # if there is a restriction on i_dof
                     for i_dof in 1:DoFNode
                         if i_rest[i_dof+1] == 1
-                            K[(Connect[i_elem][rest_node]-1)*DoFNode+i_dof,:] = zeros(N_DoF)
-                            K[(Connect[i_elem][rest_node]-1)*DoFNode+i_dof,(Connect[i_elem][rest_node]-1)*DoFNode+i_dof] = 1
-                            f_int[(Connect[i_elem][rest_node]-1)*DoFNode+i_dof] = f_ext[(Connect[i_elem][rest_node]-1)*DoFNode+i_dof]
+                            K[(rest_node-1)*DoFNode+i_dof,:] = zeros(N_DoF)
+                            K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = 1
+                            f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
                         end
                     end
                 end
@@ -351,7 +351,10 @@ using LinearAlgebra
                 for i_elem in 1:N_Elems
 
                     i_sigma = (i_elem-1)*N_points
-        
+
+                    for i_dof in 1:DoFElem
+                        dD_Elem[i_dof] = dD[Connect[i_elem][(i_dof-1)÷DoFNode+1]]
+                    end
         
                     # get the element i_elem nodes coords
                     for i_node in 1:N_NodesInElem
@@ -382,7 +385,6 @@ using LinearAlgebra
 
                         strain = B * dD_Elem
                         d_sigma = C * strain
-                        println(d_sigma)
                         # sigma_xx = sigma_total[1,i_sigma+integ_points] + d_sigma[1]
                         # sigma_yy = sigma_total[2,i_sigma+integ_points] + d_sigma[2]
                         # sigma_xy = sigma_total[3,i_sigma+integ_points] + d_sigma[3]
@@ -410,7 +412,6 @@ using LinearAlgebra
                 maxdD,_ = findmax(dD)
                 maxdD = abs(maxdD)
                 count +=1
-                println(count)
             end
         end
 
