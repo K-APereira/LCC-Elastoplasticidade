@@ -404,6 +404,8 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
             f_int = np.matrix(np.zeros((NDoF, 1)))
             [K, f_int] = get_globalK(Nnodes, NGP, t, NELE, dofelem, assmtrx, restrs, NDoF, X, Y, ifPlast,
                 csi, eta, w, Cel, sigma_total, connect, f_int, dD)
+            print(K[50,50])
+            _ = input()
             b = f_ext - f_int
             dD = np.linalg.inv(K) * b
             #print(np.max(abs(dD)))

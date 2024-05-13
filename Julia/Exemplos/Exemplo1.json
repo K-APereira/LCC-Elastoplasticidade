@@ -6,7 +6,7 @@
         "YieldStress": 450
     },
 
-    "PlaneStressOrStrain": "Plane Stress",
+    "PlaneStressOrStrain": "PlaneStress",
 
     "DoFNode": 2,
 

@@ -53,7 +53,7 @@ using LinearAlgebra
 
         # select state between Plane Stress or Plane Strain
 
-        if PlaneStressOrStrain == "Plane Stress"
+        if PlaneStressOrStrain == "PlaneStress"
             aux = (E/(1-(v^2)))
             C[1,1] = aux
             C[1,2] = v*aux
@@ -65,7 +65,7 @@ using LinearAlgebra
             C[3,2] = aux
             C[3,3] = ((1-v)/2)*aux
 
-        elseif PlaneStressOrStrain == "Plane Strain"
+        elseif PlaneStressOrStrain == "PlaneStrain"
             aux = (E * (1 - v) / ((1 + v) * (1 - 2 * v)))
             C[1,1] = aux
             C[1,2] = (v/(1-v))*aux
@@ -183,7 +183,7 @@ using LinearAlgebra
         K = zeros((N_DoF,N_DoF)) #stiffness matrix
         f_int = zeros(N_DoF)
         XY_Elem = zeros(N_NodesInElem, 2) # elemets' coords
-        dD_Elem = zeros(DoFElem) # displacement of the nodes in one element
+        # dD_Elem = zeros(DoFElem) # displacement of the nodes in one element
         N_points = NGP*NGP # number of integration points
 
         for i_elem in 1:N_Elems
@@ -217,7 +217,7 @@ using LinearAlgebra
                     sigma_xx = sigma_total[1,i_sigma+integ_points]
                     sigma_yy = sigma_total[2,i_sigma+integ_points]
                     sigma_xy = sigma_total[3,i_sigma+integ_points]
-                    df = [(2*sigma_xx-sigma_yy)/3 (2*sigma_yy - sigma_xx)/3 2*sigma_xy]
+                    df = [(2*sigma_xx-sigma_yy)/3, (2*sigma_yy - sigma_xx)/3, 2*sigma_xy]
                     C = Cel - (Cel * df * transpose(df) * Cel)/(transpose(df) * Cel * df)
                 else
                     C = Cel
@@ -234,23 +234,24 @@ using LinearAlgebra
                     end
                     f_int[(Connect[i_elem][(i_dof-1)÷DoFNode+1]-1)*DoFNode+((i_dof-1)%DoFNode+1)] += f_int_elem[i_dof]
                 end
-
-                for i_rest in Restrs
-                    # restricted Node
-                    rest_node = i_rest[1]
-                    # if there is a restriction on i_dof
-                    for i_dof in 1:DoFNode
-                        if i_rest[i_dof+1] == 1
-                            K[(rest_node-1)*DoFNode+i_dof,:] = zeros(N_DoF)
-                            K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = 1
-                            f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
-                        end
-                    end
-                end
-
             end
         end
-
+        
+        for i_rest in Restrs
+            # restricted Node
+            rest_node = i_rest[1]
+            # if there is a restriction on i_dof
+            for i_dof in 1:DoFNode
+                if i_rest[i_dof+1] == 1
+                    K[(rest_node-1)*DoFNode+i_dof,:] = zeros(N_DoF)
+                    K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = 1
+                    f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
+                    # aux = maximum(K[(rest_node-1)*DoFNode+i_dof,:])
+                    # K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = aux*10^16
+                    # f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
+                end
+            end
+        end
         return K, f_int
     end
 
@@ -342,6 +343,8 @@ using LinearAlgebra
                 (K, f_int) = Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
                 csi, eta, w, Cel, sigma_total, Connect, f_ext, dD)
                 b = f_ext - f_int
+                println(K[50,50])
+                readline()
                 dD = inv(K)*b
 
                 maxdD = 0
@@ -377,7 +380,7 @@ using LinearAlgebra
                             sigma_xx = sigma_total[1,i_sigma+integ_points]
                             sigma_yy = sigma_total[2,i_sigma+integ_points]
                             sigma_xy = sigma_total[3,i_sigma+integ_points]
-                            df = [(2*sigma_xx-sigma_yy)/3 (2*sigma_yy - sigma_xx)/3 2*sigma_xy]
+                            df = [(2*sigma_xx-sigma_yy)/3, (2*sigma_yy - sigma_xx)/3, 2*sigma_xy]
                             C = Cel - (Cel * df * transpose(df) * Cel)/(transpose(df) * Cel * df)
                         else
                             C = Cel
@@ -408,11 +411,18 @@ using LinearAlgebra
                         end
                     end
                 end
+                
                 D += dD
-                maxdD,_ = findmax(dD)
-                maxdD = abs(maxdD)
+                # maxdD = maximum(dD)
+                # mindD = minimum(dD)
+                maxdD = max(maximum(dD),minimum(dD))
                 count +=1
+                if count>20
+                    println("aaaaa")
+                    readline()
+                end
             end
+            println(i_step)
         end
 
 
