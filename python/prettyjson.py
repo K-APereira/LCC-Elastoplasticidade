@@ -9,7 +9,7 @@ def fwriteKeyVals(data, f, indent=0):
             else:
                 f.write( "    " * indent + " [" )
             for j in range(len(data[0])):  
-                f.write( "%f" % data[i][j] )
+                f.write( "%f" % data[i,j] )
                 f.write( "," ) if j != len(data[0])-1 else (f.write( "]," ) if i != len(data)-1 else f.write( "]" ))  
             f.write( "\n" ) if i != len(data)-1 else f.write( "]" )  
     elif isinstance(data, dict):

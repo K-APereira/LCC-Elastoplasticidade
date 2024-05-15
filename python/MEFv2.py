@@ -276,9 +276,11 @@ def get_globalK(Nnodes, NGP, t, NELE, dofelem, assmtrx, restrs, NDoF, X, Y, ifPl
                 print("TENSÃO ANTERIOR",'-'*57, "\n", sigma_total[:, i_sigma + i], "\n")
                 print("DELTA_SIGMA",'-'*61, "\n", C * B * dDelem, "\n")
 
+
         # Calcula a matriz de rigidez através de integração numérica
             Kelem += Bt * C * B * float(J * t * w[i, 0])
             fe_int += Bt * sigma_total[:, i_sigma + i] * float(J * t * w[i, 0])
+
 
         for ildof in range(dofelem):
             igdof = int(assmtrx[ildof, iele])
@@ -322,7 +324,6 @@ def get_globalK(Nnodes, NGP, t, NELE, dofelem, assmtrx, restrs, NDoF, X, Y, ifPl
                 K[igdof, (igdof + 1): NDoF + 1] = 0
                 K[0: igdof, igdof] = 0
                 K[(igdof + 1): NDoF, igdof] = 0
-
 
     # Saída de dados da função "get_globalK"
     return K, f_int
@@ -374,7 +375,6 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
             igdof = int(2 * forces[i, 2] + 1) # Nó final
             F[igdof, 0] += Pnode
 
-
     # Obtenção dos pontos de Gauss
     [csi1, w1] = PtsGauss1d(NGP)
     k2 = 0
@@ -402,10 +402,9 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
 
         while maxdD > tolD:
             f_int = np.matrix(np.zeros((NDoF, 1)))
+            
             [K, f_int] = get_globalK(Nnodes, NGP, t, NELE, dofelem, assmtrx, restrs, NDoF, X, Y, ifPlast,
                 csi, eta, w, Cel, sigma_total, connect, f_int, dD)
-            print(K[50,50])
-            _ = input()
             b = f_ext - f_int
             dD = np.linalg.inv(K) * b
             #print(np.max(abs(dD)))
@@ -418,6 +417,7 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
                 i_sigma = iele * NGP * NGP  # ID do elemento analisado na matriz dos tensores
                 for idof in range(dofelem):  # Faz o assembly do vetor de deslocamento do elemento
                     dDelem[idof, 0] = dD[int(assmtrx[idof, iele]), 0]
+                
 
                 for i in range(Nnodes):
                     XYelem[i, 0] = X[int(connect[i, iele]), 0]
@@ -451,8 +451,7 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
                     elif ifPlast[iele, m] == 0:
                         C = Cel
 
-                    strain = B * dDelem
-                    d_sigma = C * strain
+                    d_sigma = C * B * dDelem
 
                     # Atualiza as tensões
                     sigma_teste = sigma_total[:, i_sigma + m] + d_sigma
@@ -464,6 +463,7 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
                     J2 = 1/6 * ((sigma_xx - sigma_yy) ** 2 + sigma_yy ** 2 + sigma_xx ** 2) + sigma_xy ** 2 # Calcula o segundo invariante das tensões
                     f_yield = J2 - (ky**2) # ORIGINAL: f_yield = np.sqrt(J2) - ky
                     j2Elem[iele] += np.sqrt(J2)
+
 
                     if f_yield > 0:
                         sigma_trial = sigma_total[:, i_sigma + m]
@@ -479,6 +479,11 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
                         ifPlast[iele, m] = 0
 
             D += dD
+            count += 1
+            print(count)
+            if count > 20:
+                print("STATUS: Looping encerrado por limite de interações atingido", '\n')
+                break
 
             if np.any(ifPlast) == False:
                 print("STATUS: Passo", istep, "sem plastificação em algum ponto. Looping", count, "encerrado", '\n')
@@ -490,12 +495,7 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
 
             maxdD = abs(np.max(dD))
 
-            if count > 20:
-                print("STATUS: Looping encerrado por limite de interações atingido", '\n')
-                break
 
-            count += 1
-            print(count)
 
     data = open("j2.txt", "w")
     for j2 in j2Elem:

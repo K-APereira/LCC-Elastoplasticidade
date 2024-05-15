@@ -62,7 +62,7 @@ using LinearAlgebra
             C[2,2] = aux
             C[2,3] = 0
             C[3,1] = 0
-            C[3,2] = aux
+            C[3,2] = 0
             C[3,3] = ((1-v)/2)*aux
 
         elseif PlaneStressOrStrain == "PlaneStrain"
@@ -178,19 +178,24 @@ using LinearAlgebra
 
     # function that returns the global stiffness matrix and the internal forces
     function Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
-        csi, eta, w, Cel, sigma_total, Connect, f_ext, dD)
+        csi, eta, w, Cel, sigma_total, Connect, dD)
         
         K = zeros((N_DoF,N_DoF)) #stiffness matrix
-        f_int = zeros(N_DoF)
         XY_Elem = zeros(N_NodesInElem, 2) # elemets' coords
         # dD_Elem = zeros(DoFElem) # displacement of the nodes in one element
         N_points = NGP*NGP # number of integration points
+        f_int = zeros(N_DoF) 
 
         for i_elem in 1:N_Elems
 
             K_elem = zeros((DoFElem,DoFElem)) # element's K
             f_int_elem = zeros(DoFElem) # element's internal force
             i_sigma = (i_elem-1)*N_points
+
+            mapvec = zeros(Int32,DoFElem)
+            for d in 1:DoFElem
+                mapvec[d] = (Connect[i_elem][(d-1)÷DoFNode+1]-1)*DoFNode+((d-1)%DoFNode+1)
+            end
 
             # get the element i_elem nodes coords
             for i_node in 1:N_NodesInElem
@@ -200,10 +205,10 @@ using LinearAlgebra
             for integ_points in 1:N_points
                 # get the shape form functions derivates in natural coords
                 dNdcsi, dNdeta = DerivNatShapeFunc(csi[integ_points], eta[integ_points],N_NodesInElem)
-
+                
                 #get the jacobian matrix
                 Jac = JacMat(dNdcsi, dNdeta, XY_Elem)
-
+                
                 dNdcart = DerivCartShapeFunc(dNdcsi, dNdeta, Jac, N_NodesInElem)
 
                 B = MatDefDesloc(dNdcart, N_NodesInElem)
@@ -226,14 +231,15 @@ using LinearAlgebra
                 K_elem += Bt* C * B * J * Props["Thickness"] * w[integ_points]
                 f_int_elem +=  Bt * sigma_total[:, i_sigma+integ_points] * J * Props["Thickness"] * w[integ_points]
                 
-                for i_dof in 1:DoFElem
-                    for j_dof in 1:DoFElem
-                        # (Connect[i_elem][(i_dof-1)÷DoFNode+1]-1) is number of nodes behind current
-                        # (i_dof-1)%DoFNode+1 gets the dof index of current node
-                        K[(Connect[i_elem][(i_dof-1)÷DoFNode+1]-1)*DoFNode+((i_dof-1)%DoFNode+1),(Connect[i_elem][(j_dof-1)÷DoFNode+1]-1)*DoFNode+((j_dof-1)%DoFNode+1)] += K_elem[i_dof,j_dof]
-                    end
-                    f_int[(Connect[i_elem][(i_dof-1)÷DoFNode+1]-1)*DoFNode+((i_dof-1)%DoFNode+1)] += f_int_elem[i_dof]
+            end
+
+            for i_dof in 1:DoFElem
+                for j_dof in 1:DoFElem
+                    # (Connect[i_elem][(i_dof-1)÷DoFNode+1]-1) is number of nodes behind current
+                    # (i_dof-1)%DoFNode+1 gets the dof index of current node
+                    K[mapvec[i_dof],mapvec[j_dof]] += K_elem[i_dof,j_dof]
                 end
+                f_int[mapvec[i_dof]] += f_int_elem[i_dof]
             end
         end
         
@@ -244,8 +250,10 @@ using LinearAlgebra
             for i_dof in 1:DoFNode
                 if i_rest[i_dof+1] == 1
                     K[(rest_node-1)*DoFNode+i_dof,:] = zeros(N_DoF)
+                    K[:,(rest_node-1)*DoFNode+i_dof] = zeros(N_DoF)
                     K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = 1
-                    f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
+                    # f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
+                    f_int[(rest_node-1)*DoFNode+i_dof] = 0
                     # aux = maximum(K[(rest_node-1)*DoFNode+i_dof,:])
                     # K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = aux*10^16
                     # f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
@@ -331,7 +339,6 @@ using LinearAlgebra
         ky = YieldStress / sqrt(3) # material's yield stress in pure shear (used in von Mises yield criterion)
         Cel = ConstMtrx(PlaneStressOrStrain, Props)
 
-
         for i_step in 1:N_Steps
             f_ext += f_incr
             count = 0
@@ -339,12 +346,11 @@ using LinearAlgebra
 
             # start Newthon-Raphson method to calculate the displacement
             while maxdD > tolD
+                
                 # calculate the stiffness matrix K and the internal forces f_int
                 (K, f_int) = Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
-                csi, eta, w, Cel, sigma_total, Connect, f_ext, dD)
+                csi, eta, w, Cel, sigma_total, Connect, dD)
                 b = f_ext - f_int
-                println(K[50,50])
-                readline()
                 dD = inv(K)*b
 
                 maxdD = 0
@@ -355,8 +361,9 @@ using LinearAlgebra
 
                     i_sigma = (i_elem-1)*N_points
 
+
                     for i_dof in 1:DoFElem
-                        dD_Elem[i_dof] = dD[Connect[i_elem][(i_dof-1)÷DoFNode+1]]
+                        dD_Elem[i_dof] = dD[(Connect[i_elem][(i_dof-1)÷DoFNode+1]-1)*DoFNode+((i_dof-1)%DoFNode+1)]
                     end
         
                     # get the element i_elem nodes coords
@@ -386,12 +393,13 @@ using LinearAlgebra
                             C = Cel
                         end
 
-                        strain = B * dD_Elem
-                        d_sigma = C * strain
+                        d_sigma = C * B * dD_Elem
+
                         # sigma_xx = sigma_total[1,i_sigma+integ_points] + d_sigma[1]
                         # sigma_yy = sigma_total[2,i_sigma+integ_points] + d_sigma[2]
                         # sigma_xy = sigma_total[3,i_sigma+integ_points] + d_sigma[3]
                         sigma_xx,sigma_yy,sigma_xy = sigma_total[:,i_sigma+integ_points] + d_sigma
+
                         # von Mises criterion
                         J2 = 1/6 * ((sigma_xx-sigma_yy)^2 + sigma_yy^2 + sigma_xx^2) + sigma_xy^2
                         f_yield = J2 - ky^2
@@ -413,13 +421,11 @@ using LinearAlgebra
                 end
                 
                 D += dD
-                # maxdD = maximum(dD)
-                # mindD = minimum(dD)
                 maxdD = max(maximum(dD),minimum(dD))
                 count +=1
                 if count>20
-                    println("aaaaa")
-                    readline()
+                    println("Possible fracture, ending loops")
+                    exit()
                 end
             end
             println(i_step)

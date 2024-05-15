@@ -32,7 +32,7 @@ Y = coord_nodes[:,[2]]
 #print(type(connect[0, 0]))
 
 # Atribuição de variáveis de acordo com a saída de dados da função "viewmesh"
-viewmesh(XY, connect, elem_nodes)
+# viewmesh(XY, connect, elem_nodes)
 
 # Atribuição de variáveis auxiliares de acordo com a saída de dados da função "readmesh"
 E = props[0, 0]
