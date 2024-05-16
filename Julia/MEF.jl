@@ -1,47 +1,47 @@
 module MEF
-using LinearAlgebra
+using LinearAlgebra, FastGaussQuadrature
 
     # function that calculates the gauss points to integrate in FEM_Ep
-    function Gauss_Pts(NGP)
-        # setting the vector of gauss points' locations and weights
-        location = zeros(NGP)
-        weight = zeros(NGP)
+    # function Gauss_Pts(NGP)
+    #     # setting the vector of gauss points' locations and weights
+    #     location = zeros(NGP)
+    #     weight = zeros(NGP)
 
-        # filling the vectors for each number of gauss points
-        if NGP == 1
-            location[1] = 0
-            weight[1] = 2
+    #     # filling the vectors for each number of gauss points
+    #     if NGP == 1
+    #         location[1] = 0
+    #         weight[1] = 2
 
-        elseif NGP == 2
-            location[1] = -1/sqrt(3)
-            location[2] = -location[1]
+    #     elseif NGP == 2
+    #         location[1] = -1/sqrt(3)
+    #         location[2] = -location[1]
 
-            weight[1] = 1
-            weight[2] = 1
+    #         weight[1] = 1
+    #         weight[2] = 1
 
-        elseif NGP == 3
-            location[1] = -0.774596669241483
-            location[2] = 0
-            location[3] = -location[1]
+    #     elseif NGP == 3
+    #         location[1] = -0.774596669241483
+    #         location[2] = 0
+    #         location[3] = -location[1]
 
-            weight[1] = 5/9
-            weight[2] = 8/9
-            weight[3] = 8/9
+    #         weight[1] = 5/9
+    #         weight[2] = 8/9
+    #         weight[3] = 5/9
 
-        elseif NGP == 4
-            location[1] = -0.861136311594053
-            location[2] = -0.339981043584856
-            location[3] = 0.339981043584856
-            location[3] = 0.861136311594053
+    #     elseif NGP == 4
+    #         location[1] = -0.861136311594053
+    #         location[2] = -0.339981043584856
+    #         location[3] = 0.339981043584856
+    #         location[3] = 0.861136311594053
 
-            weight[1] = 0.347854845137454
-            weight[2] = 0.652145154862546
-            weight[3] = 0.652145154862546
-            weight[4] = 0.347854845137454
+    #         weight[1] = 0.347854845137454
+    #         weight[2] = 0.652145154862546
+    #         weight[3] = 0.652145154862546
+    #         weight[4] = 0.347854845137454
 
-        end
-        return location, weight
-    end
+    #     end
+    #     return location, weight
+    # end
     
     # function that generates the constitutive matrix for the material and state
     function ConstMtrx(PlaneStressOrStrain, Props)
@@ -57,24 +57,16 @@ using LinearAlgebra
             aux = (E/(1-(v^2)))
             C[1,1] = aux
             C[1,2] = v*aux
-            C[1,3] = 0
             C[2,1] = v*aux
             C[2,2] = aux
-            C[2,3] = 0
-            C[3,1] = 0
-            C[3,2] = 0
             C[3,3] = ((1-v)/2)*aux
 
         elseif PlaneStressOrStrain == "PlaneStrain"
             aux = (E * (1 - v) / ((1 + v) * (1 - 2 * v)))
             C[1,1] = aux
             C[1,2] = (v/(1-v))*aux
-            C[1,3] = 0
             C[2,1] = (v/(1-v))*aux
             C[2,2] = aux
-            C[2,3] = 0
-            C[3,1] = 0
-            C[3,2] = 0
             C[3,3] = ((1 - 2 * v)/(2 * (1 - v)))*aux
             
         end
@@ -114,20 +106,20 @@ using LinearAlgebra
             dNdeta[4] = 0.25 * dMxs - 0.5 * (dNdeta[7] + dNdeta[8])
 
         elseif N_NodesInElem == 4
-            dPet = 1 + eta
-            dMet = 1 - eta
-            dPxs = 1 + csi
-            dMxs = 1 - csi
+            dPet = (1 + eta)*0.25
+            dMet = (1 - eta)*0.25
+            dPxs = (1 + csi)*0.25
+            dMxs = (1 - csi)*0.25
     
-            dNdcsi[1] = -0.25 * dMet
-            dNdcsi[2] = 0.25 * dMet
-            dNdcsi[3] = 0.25 * dPet
-            dNdcsi[4] = -0.25 * dPet
+            dNdcsi[1] = -dMet
+            dNdcsi[2] = dMet
+            dNdcsi[3] = dPet
+            dNdcsi[4] = -dPet
     
-            dNdeta[1] = -0.25 * dMxs
-            dNdeta[2] = -0.25 * dPxs
-            dNdeta[3] = 0.25 * dPxs
-            dNdeta[4] = 0.25 * dMxs
+            dNdeta[1] = -dMxs
+            dNdeta[2] = -dPxs
+            dNdeta[3] = dPxs
+            dNdeta[4] = dMxs
         end
 
         return dNdcsi,dNdeta
@@ -135,7 +127,7 @@ using LinearAlgebra
     end
 
     # function that calculates the Jacobian matrix between natural and cartesian coords
-    function JacMat(dNdcsi, dNdeta, XY_Elem)
+    function InvJacMat(dNdcsi, dNdeta, XY_Elem)
         xelem = XY_Elem[:,1]
         yelem = XY_Elem[:,2]
 
@@ -144,14 +136,16 @@ using LinearAlgebra
         dydcsi = LinearAlgebra.dot(dNdcsi, yelem)
         dydeta = LinearAlgebra.dot(dNdeta, yelem)
 
-        Jac = [dxdcsi dydcsi; 
-               dxdeta dydeta]
+        detJ = dxdcsi*dydeta-dydcsi*dxdeta
 
-        return Jac
+        InvJac = [dydeta -dxdeta;
+                  -dydcsi dxdcsi]/detJ
+
+        return InvJac,detJ
     end
 
     # function that transforms the natural coords derivates in cartesian derivates
-    function DerivCartShapeFunc(dNdcsi, dNdeta, Jac, N_NodesInElem)
+    function DerivCartShapeFunc(dNdcsi, dNdeta, InvJac, N_NodesInElem)
         dNnat = zeros((2,N_NodesInElem))
 
         for i in 1:N_NodesInElem
@@ -159,7 +153,7 @@ using LinearAlgebra
             dNnat[2,i] = dNdeta[i]
         end
 
-        dNdcart = inv(Jac) * dNnat
+        dNdcart = InvJac * dNnat
 
         return dNdcart
     end
@@ -178,11 +172,10 @@ using LinearAlgebra
 
     # function that returns the global stiffness matrix and the internal forces
     function Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
-        csi, eta, w, Cel, sigma_total, Connect, dD)
+        csi, eta, w, Cel, sigma_total, Connect, f_ext)
         
         K = zeros((N_DoF,N_DoF)) #stiffness matrix
         XY_Elem = zeros(N_NodesInElem, 2) # elemets' coords
-        # dD_Elem = zeros(DoFElem) # displacement of the nodes in one element
         N_points = NGP*NGP # number of integration points
         f_int = zeros(N_DoF) 
 
@@ -193,12 +186,12 @@ using LinearAlgebra
             i_sigma = (i_elem-1)*N_points
 
             mapvec = zeros(Int32,DoFElem)
-            for d in 1:DoFElem
+            @simd for d in 1:DoFElem
                 mapvec[d] = (Connect[i_elem][(d-1)÷DoFNode+1]-1)*DoFNode+((d-1)%DoFNode+1)
             end
 
             # get the element i_elem nodes coords
-            for i_node in 1:N_NodesInElem
+            @simd for i_node in 1:N_NodesInElem
                 XY_Elem[i_node,:] = NodesCoord[(Connect[i_elem][i_node])]
             end
 
@@ -206,14 +199,14 @@ using LinearAlgebra
                 # get the shape form functions derivates in natural coords
                 dNdcsi, dNdeta = DerivNatShapeFunc(csi[integ_points], eta[integ_points],N_NodesInElem)
                 
-                #get the jacobian matrix
-                Jac = JacMat(dNdcsi, dNdeta, XY_Elem)
+                #get the jacobian matrix and its determinant
+                InvJac, J = InvJacMat(dNdcsi, dNdeta, XY_Elem)
                 
-                dNdcart = DerivCartShapeFunc(dNdcsi, dNdeta, Jac, N_NodesInElem)
+                dNdcart = DerivCartShapeFunc(dNdcsi, dNdeta, InvJac, N_NodesInElem)
 
                 B = MatDefDesloc(dNdcart, N_NodesInElem)
 
-                J = LinearAlgebra.det(Jac)
+                # J = LinearAlgebra.det(Jac)
 
                 Bt = transpose(B)
 
@@ -234,7 +227,7 @@ using LinearAlgebra
             end
 
             for i_dof in 1:DoFElem
-                for j_dof in 1:DoFElem
+                @simd for j_dof in 1:DoFElem
                     # (Connect[i_elem][(i_dof-1)÷DoFNode+1]-1) is number of nodes behind current
                     # (i_dof-1)%DoFNode+1 gets the dof index of current node
                     K[mapvec[i_dof],mapvec[j_dof]] += K_elem[i_dof,j_dof]
@@ -249,11 +242,11 @@ using LinearAlgebra
             # if there is a restriction on i_dof
             for i_dof in 1:DoFNode
                 if i_rest[i_dof+1] == 1
-                    K[(rest_node-1)*DoFNode+i_dof,:] = zeros(N_DoF)
-                    K[:,(rest_node-1)*DoFNode+i_dof] = zeros(N_DoF)
+                    @simd for i in 1:N_DoF
+                        K[(rest_node-1)*DoFNode+i_dof,i] = zero(Float64)
+                    end
                     K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = 1
-                    # f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
-                    f_int[(rest_node-1)*DoFNode+i_dof] = 0
+                    f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
                     # aux = maximum(K[(rest_node-1)*DoFNode+i_dof,:])
                     # K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = aux*10^16
                     # f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
@@ -268,16 +261,16 @@ using LinearAlgebra
         
         # Setting matrix for function's use
 
-        F = zeros((N_DoF)) # total force for node
-        f_ext = zeros((N_DoF)) # external force for node in each step
-        sigma_total = zeros((3, NGP * NGP * N_Elems)) # stress tensor
-        D = zeros((N_DoF)) # total displacement
-        dD = zeros((N_DoF)) # displacement for step
-        dD_Elem = zeros((DoFElem)) # elements' displacement for step
-        XY_Elem = zeros((N_NodesInElem, 2)) # elemets' coords
+        F = zeros(Float64,N_DoF) # total force for node
+        f_ext = zeros(Float64,N_DoF) # external force for node in each step
+        sigma_total = zeros(Float64,(3, NGP * NGP * N_Elems)) # stress tensor
+        D = zeros(Float64,(N_DoF)) # total displacement
+        dD = zeros(Float64,(N_DoF)) # displacement for step
+        dD_Elem = zeros(Float64,(DoFElem)) # elements' displacement for step
+        XY_Elem = zeros(Float64,(N_NodesInElem, 2)) # elemets' coords
         if_Plast = zeros(Bool,(N_Elems,NGP*NGP)) # state of each gauss point for elem
         tolD = 0.001 # displacement increment tolerance
-        J2Elem = zeros(N_Elems) # von Mises yield criterion
+        J2Elem = zeros(Float64,N_Elems) # von Mises yield criterion
         YieldStress = Props["YieldStress"]
 
 
@@ -299,10 +292,10 @@ using LinearAlgebra
             if Forces[i][4] != 0
                 F_Node = (Forces[i][4] * r)/2 # half force for each node
 
-                Node = 2 * Forces[i][2] - 1
-                F[Node] += F_Node
-                Node = 2 * Forces[i][3] - 1
-                F[Node] += F_Node
+                i_dof = DoFNode * Forces[i][2] - 1
+                F[i_dof] += F_Node
+                i_dof = DoFNode * Forces[i][3] - 1
+                F[i_dof] += F_Node
                 
             end
 
@@ -310,17 +303,17 @@ using LinearAlgebra
             if Forces[i][5] != 0
                 F_Node = (Forces[i][5] * r)/2 # half force for each node
 
-                Node = 2 * Forces[i][2]
-                F[Node] += F_Node
-                Node = 2 * Forces[i][3]
-                F[Node] += F_Node
+                i_dof = DoFNode * Forces[i][2]
+                F[i_dof] += F_Node
+                i_dof = DoFNode * Forces[i][3]
+                F[i_dof] += F_Node
                 
             end
 
         end
 
         # Getting Gauss points locations and weights
-        (GP_locations, GP_weights) = Gauss_Pts(NGP)
+        (GP_locations, GP_weights) = gausslegendre(NGP)
         k2 = 1
         csi = zeros(NGP*NGP)
         eta = zeros(NGP*NGP)
@@ -349,7 +342,7 @@ using LinearAlgebra
                 
                 # calculate the stiffness matrix K and the internal forces f_int
                 (K, f_int) = Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
-                csi, eta, w, Cel, sigma_total, Connect, dD)
+                csi, eta, w, Cel, sigma_total, Connect, f_ext)
                 b = f_ext - f_int
                 dD = inv(K)*b
 
@@ -362,12 +355,12 @@ using LinearAlgebra
                     i_sigma = (i_elem-1)*N_points
 
 
-                    for i_dof in 1:DoFElem
+                    @simd for i_dof in 1:DoFElem
                         dD_Elem[i_dof] = dD[(Connect[i_elem][(i_dof-1)÷DoFNode+1]-1)*DoFNode+((i_dof-1)%DoFNode+1)]
                     end
         
                     # get the element i_elem nodes coords
-                    for i_node in 1:N_NodesInElem
+                    @simd for i_node in 1:N_NodesInElem
                         XY_Elem[i_node,:] = NodesCoord[(Connect[i_elem][i_node])]
                     end
         
@@ -375,10 +368,10 @@ using LinearAlgebra
                         # get the shape form functions derivates in natural coords
                         dNdcsi, dNdeta = DerivNatShapeFunc(csi[integ_points], eta[integ_points],N_NodesInElem)
         
-                        #get the jacobian matrix
-                        Jac = JacMat(dNdcsi, dNdeta, XY_Elem)
+                        #get the jacobian matrix and its determinant
+                        InvJac, J = InvJacMat(dNdcsi, dNdeta, XY_Elem)
         
-                        dNdcart = DerivCartShapeFunc(dNdcsi, dNdeta, Jac, N_NodesInElem)
+                        dNdcart = DerivCartShapeFunc(dNdcsi, dNdeta, InvJac, N_NodesInElem)
         
                         B = MatDefDesloc(dNdcart, N_NodesInElem)
         
@@ -428,7 +421,6 @@ using LinearAlgebra
                     exit()
                 end
             end
-            println(i_step)
         end
 
 

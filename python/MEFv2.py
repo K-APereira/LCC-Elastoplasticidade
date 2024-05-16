@@ -480,7 +480,6 @@ def MEF_ep(NDoF, nstep, NELE, connect, Nnodes, NGP, X, Y, dofelem, t, v, E, plan
 
             D += dD
             count += 1
-            print(count)
             if count > 20:
                 print("STATUS: Looping encerrado por limite de interações atingido", '\n')
                 break

@@ -1,0 +1,13 @@
+Sempre rodando pelo menos 2 vezes seguidas
+
+exemplo1
+força 400
+
+Original (sem tipar nada)
+0.607740 seconds (256.40 k allocations: 16.467 MiB, 1.60% gc time, 89.74% compilation time)
+
+Inversa da Jacobiana e determinante calculadas manualmente
+0.033079 seconds (31.43 k allocations: 2.531 MiB)
+
+Máximo de @simd
+0.027239 seconds (31.36 k allocations: 2.511 MiB)

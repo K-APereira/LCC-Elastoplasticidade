@@ -32,5 +32,5 @@ end
 ##### MAIN #####
 ######################################## 
 #run with timer
-# @time main("Julia/Exemplos/Exemplo2.json","Julia/Exemplos/ResultadoExemplo2.json",pretty_save = true)
-@time main(raw"Julia\Exemplos\Exemplo2.json")
+# @time main(raw"Julia\Exemplos\Exemplo 1.1 - 100 elementos.json",raw"Julia\Exemplos\Resultado2 Exemplo 1.1 - 100 elementos.json",pretty_save = true)
+@time main(raw"Julia\Exemplos\Exemplo1.json")
