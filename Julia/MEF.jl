@@ -138,8 +138,8 @@ using LinearAlgebra, FastGaussQuadrature
 
         detJ = dxdcsi*dydeta-dydcsi*dxdeta
 
-        InvJac = [dydeta -dxdeta;
-                  -dydcsi dxdcsi]/detJ
+        InvJac = [dydeta -dydcsi;
+                  -dxdeta dxdcsi]/detJ
 
         return InvJac,detJ
     end
@@ -205,7 +205,7 @@ using LinearAlgebra, FastGaussQuadrature
                 dNdcart = DerivCartShapeFunc(dNdcsi, dNdeta, InvJac, N_NodesInElem)
 
                 B = MatDefDesloc(dNdcart, N_NodesInElem)
-
+               
                 # J = LinearAlgebra.det(Jac)
 
                 Bt = transpose(B)
@@ -228,8 +228,6 @@ using LinearAlgebra, FastGaussQuadrature
 
             for i_dof in 1:DoFElem
                 @simd for j_dof in 1:DoFElem
-                    # (Connect[i_elem][(i_dof-1)÷DoFNode+1]-1) is number of nodes behind current
-                    # (i_dof-1)%DoFNode+1 gets the dof index of current node
                     K[mapvec[i_dof],mapvec[j_dof]] += K_elem[i_dof,j_dof]
                 end
                 f_int[mapvec[i_dof]] += f_int_elem[i_dof]

@@ -3,6 +3,8 @@ include("MEF.jl")
 using .MEF
 include("readmesh.jl")
 using .meshReader
+include("view.jl")
+using .view
 
 function main(meshInput,savepath = nothing; pretty_save = false)
 
@@ -12,8 +14,9 @@ function main(meshInput,savepath = nothing; pretty_save = false)
     
 
     (D, sigma_total, j2Elem) = MEF.FEM_Ep(N_DoF, N_Steps, N_Elems, Connect, N_NodesInElem, NGP, NodesCoord, DoFElem, Props, PlaneStressOrStrain, DoFNode, Forces, Restrs)
-    
 
+    
+    
     if isnothing(savepath)
         println("\nD:")
         println(D)
@@ -25,6 +28,8 @@ function main(meshInput,savepath = nothing; pretty_save = false)
         meshReader.write_results(savepath,("D",D),("sigma_total",sigma_total),("j2Elem",j2Elem);pretty = pretty_save)
         println("\nResults saved in: ", savepath)
     end
+
+    view.viewMesh(NodesCoord, Connect, D, 10, j2Elem)
 end
 
 
@@ -33,4 +38,4 @@ end
 ######################################## 
 #run with timer
 # @time main(raw"Julia\Exemplos\Exemplo 1.1 - 100 elementos.json",raw"Julia\Exemplos\Resultado2 Exemplo 1.1 - 100 elementos.json",pretty_save = true)
-@time main(raw"Julia\Exemplos\Exemplo1.json")
+@time main(raw"Julia\Exemplos\Exemplo 3.3.2 - 256 elementos.json")
