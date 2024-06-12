@@ -1,5 +1,5 @@
 module MEF
-using LinearAlgebra, FastGaussQuadrature
+using LinearAlgebra, FastGaussQuadrature, IterativeSolvers, SparseArrays
 
     # function that calculates the gauss points to integrate in FEM_Ep
     # function Gauss_Pts(NGP)
@@ -174,7 +174,7 @@ using LinearAlgebra, FastGaussQuadrature
     function Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
         csi, eta, w, Cel, sigma_total, Connect, f_ext)
         
-        K = zeros((N_DoF,N_DoF)) #stiffness matrix
+        K = spzeros((N_DoF,N_DoF)) #stiffness matrix
         XY_Elem = zeros(N_NodesInElem, 2) # elemets' coords
         N_points = NGP*NGP # number of integration points
         f_int = zeros(N_DoF) 
@@ -245,9 +245,6 @@ using LinearAlgebra, FastGaussQuadrature
                     end
                     K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = 1
                     f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
-                    # aux = maximum(K[(rest_node-1)*DoFNode+i_dof,:])
-                    # K[(rest_node-1)*DoFNode+i_dof,(rest_node-1)*DoFNode+i_dof] = aux*10^16
-                    # f_int[(rest_node-1)*DoFNode+i_dof] = f_ext[(rest_node-1)*DoFNode+i_dof]
                 end
             end
         end
@@ -342,7 +339,7 @@ using LinearAlgebra, FastGaussQuadrature
                 (K, f_int) = Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
                 csi, eta, w, Cel, sigma_total, Connect, f_ext)
                 b = f_ext - f_int
-                dD = inv(K)*b
+                dD = IterativeSolvers.cg(K,b,reltol = 1e-05)
 
                 maxdD = 0
 

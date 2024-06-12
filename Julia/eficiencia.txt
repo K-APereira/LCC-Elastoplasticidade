@@ -11,3 +11,7 @@ Inversa da Jacobiana e determinante calculadas manualmente
 
 Máximo de @simd
 0.027239 seconds (31.36 k allocations: 2.511 MiB)
+
+exemplo 4.3, 1200 elems
+Matriz esparsa e solver de gradiente conjugado
+1.575072 seconds (9.97 M allocations: 580.513 MiB, 3.22% gc time, 41.44% compilation time)
