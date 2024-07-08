@@ -174,11 +174,12 @@ using LinearAlgebra, FastGaussQuadrature, IterativeSolvers, SparseArrays
     function Get_GlobalK(N_NodesInElem, NGP, Props, N_Elems, DoFElem, DoFNode, Restrs, N_DoF, NodesCoord, if_Plast,
         csi, eta, w, Cel, sigma_total, Connect, f_ext)
         
-        K = spzeros((N_DoF,N_DoF)) #stiffness matrix
+        ktriplets = zeros(3,N_Elems*DoFElem*DoFElem)
+        # K = spzeros((N_DoF,N_DoF)) #stiffness matrix
         XY_Elem = zeros(N_NodesInElem, 2) # elemets' coords
         N_points = NGP*NGP # number of integration points
-        f_int = zeros(N_DoF) 
-
+        f_int = zeros(N_DoF)
+        count = 0
         for i_elem in 1:N_Elems
 
             K_elem = zeros((DoFElem,DoFElem)) # element's K
@@ -227,13 +228,20 @@ using LinearAlgebra, FastGaussQuadrature, IterativeSolvers, SparseArrays
             end
 
             for i_dof in 1:DoFElem
-                @simd for j_dof in 1:DoFElem
-                    K[mapvec[i_dof],mapvec[j_dof]] += K_elem[i_dof,j_dof]
-                end
+                # @simd for j_dof in 1:DoFElem
+                #     # ktriplets[:,j_dof+(i_dof-1)*DoFElem+(i_elem-1)*DoFElem*DoFElem] = [mapvec[i_dof],mapvec[j_dof],K_elem[i_dof,j_dof]]
+                #     # K[mapvec[i_dof],mapvec[j_dof]] += K_elem[i_dof,j_dof]
+                # end
+                ktriplets[1,count+(i_dof-1)*DoFElem+1:count+i_dof*DoFElem] = mapvec
+                ktriplets[2,count+(i_dof-1)*DoFElem+1:count+i_dof*DoFElem] = [mapvec[i_dof] for i in 1:DoFElem]
+                ktriplets[3,count+(i_dof-1)*DoFElem+1:count+i_dof*DoFElem] = K_elem[i_dof,1:DoFElem]
                 f_int[mapvec[i_dof]] += f_int_elem[i_dof]
             end
+            count += DoFElem*DoFElem
         end
-        
+
+        K = sparse(ktriplets[1,:],ktriplets[2,:],ktriplets[3,:])
+
         for i_rest in Restrs
             # restricted Node
             rest_node = i_rest[1]
