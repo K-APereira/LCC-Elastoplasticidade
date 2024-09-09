@@ -38,4 +38,4 @@ end
 ######################################## 
 #run with timer
 # @time main(raw"Julia\Exemplos\Exemplo 1.1 - 100 elementos.json",raw"Julia\Exemplos\Resultado2 Exemplo 1.1 - 100 elementos.json",pretty_save = true)
-@time main(raw"Julia\Exemplos\Exemplo 4.3 -1200 elementos.json")
+@time main(raw"Julia\imagem3x3.json")

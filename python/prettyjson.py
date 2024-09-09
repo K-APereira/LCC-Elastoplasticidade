@@ -36,7 +36,7 @@ def fwriteKeyVals(data, f, indent=0):
 ######################################
 from readmeshv2 import *
 [NODES,coord_nodes,num_restrs,restrs,num_isomat,props,num_thick,elem_nodes,NELE,connect,Dofnode\
-        ,dofelem,NDoF,forces,nstep,planestress,NGP] = readmesh(r"python\Exemplo 1.1 - 100 elementos.txt", "python/Model_Tk.nf")
+        ,dofelem,NDoF,forces,nstep,planestress,NGP] = readmesh(r"python/imagem3x3.txt", "python/Model_Tk.nf")
 
 if planestress == 1:
     pls = "PlaneStress"
@@ -69,7 +69,9 @@ data = {
     "NGP": NGP
     
 }
-file = open(r"python\Exemplo 1.1 - 100 elementos.json","w")
+
+file = open(r"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json","w")
 fwriteKeyVals(data,file,1)
 file.close()
+print(file)
 ######################################
